@@ -5,5 +5,7 @@ user = (arn.split(":")[5])
 
 print(I + " " + user)
 
+print(len(arn))
 
-X = (arn.sp)
+result = abs(-7)
+print("Absolute value" , result)

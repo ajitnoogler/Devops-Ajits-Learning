@@ -1,0 +1,2 @@
+# Run below command to execute all python program in folder:
+for i in 'ls'; do python $i; done
