@@ -9,3 +9,5 @@ print(len(arn))
 
 result = abs(-7)
 print("Absolute value" , result)
+
+print(f"The absolute value is {result}")
