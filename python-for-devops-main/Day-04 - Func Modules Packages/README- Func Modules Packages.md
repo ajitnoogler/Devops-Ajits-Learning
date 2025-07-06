@@ -22,6 +22,15 @@ In this example, `greet` is a function that takes a `name` argument and returns 
 
 A module is a Python script containing Python code. It can define functions, classes, and variables that can be used in other Python scripts. Modules help organize and modularize your code, making it more maintainable.
 
+A module is a collection of functions, classes, and variables (and sometimes runnable code) grouped together in a single Python file. It helps organize and reuse code.
+
+# Commonly used SDK / Modules: Installed using pip - python install packages.
+For AWS    - Boto module    --> pip install boto3
+For Jira   - Jira module    --> pip install jira
+For Github - github module  --> pip install PyGithub
+For HTTP   - request module --> pip install requests
+For Numpy  - numpy          --> pip install numpy
+
 **Example:**
 
 Suppose you have a Python file named `my_module.py`:
@@ -49,6 +58,9 @@ In this case, `my_module` is a Python module containing the `square` function an
 ### Packages
 
 A package is a collection of modules organized in directories. Packages help you organize related modules into a hierarchy. They contain a special file named `__init__.py`, which indicates that the directory should be treated as a package.
+
+A package is a collection of modules (Python files) grouped together in a directory with an __init__.py file.
+Packages help organize related modules and make it easier to manage large codebases.
 
 **Example:**
 
@@ -101,6 +113,9 @@ Python workspaces can be local or virtual environments. A local environment is t
 **Example:**
 
 ```bash
+# Install virtual Env
+pip install virtualenv
+
 # Create a virtual environment
 python -m venv myenv
 
@@ -112,3 +127,15 @@ source myenv/bin/activate
 ```
 
 Once activated, you work in an isolated workspace with its Python interpreter and library dependencies.
+
+Why virtual Enviorment:
+Imagine if you have multiple project and,
+Project 1 needs, jira-1.2.6
+Project 2 needs, jira-1.2.3
+Virtual Env is answer to this as python packages are installed in virtual envirnment and not base machine..
+
+python -m venv project-01
+python -m venv project-02
+
+source project-01/bin/activate
+source project-02/bin/activate
