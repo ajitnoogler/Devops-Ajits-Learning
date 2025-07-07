@@ -191,4 +191,4 @@ sudo ufw status verbose
 
 ---
 
-Would you like this merged version exported as a new **PDF runbook** with diagrams or OCI CLI flow included?
+![9530d969-defd-4102-88c0-4c5d0d7d4e62](https://github.com/user-attachments/assets/3e1b7ecc-2d26-44a9-950c-8ccd1d1171e3)
