@@ -19,7 +19,7 @@ codespa+    2136  9.1  5.3 12997932 433772 ?     Sl   09:01   0:05 /vscode/bin/l
 codespa+     569  3.7  1.4 11833164 114016 ?     Sl   09:01   0:03 /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/out/server-main.js --log trace --force-disable-user-env --server-data-dir /home/codespace/.vscode-remote --accept-server-license-terms --host 127.0.0.1 --port 0 --connection-token-file /home/codespace/.vscode-remote/data/Machine/.connection-token-2901c5ac6db8a986a5666c3af51ff804d05af0d4 --extensions-download-dir /home/codespace/.vscode-remote/extensionsCache --start-server  --enable-remote-auto-shutdown --skip-requirements-check
 codespa+     603  8.4  1.1 1261952 93508 ?       Sl   09:01   0:07 /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/out/bootstrap-fork --type=fileWatcher
 root          57  0.2  0.8 1966712 69888 ?       Sl   09:01   0:00 dockerd --dns 168.63.129.16
-@patelpayal8 ➜ /workspaces/Devops-Learning (main) $ 
+
 
 
 more commands like below
@@ -60,25 +60,25 @@ ps aux | grep nginx | grep -v grep | awk '{cpu+=$3; mem+=$4} END {print "CPU:", 
 ps -eo pid,etime,cmd,%cpu --sort=-%cpu | awk '$2 ~ /[0-9]+:[0-9][0-9]/ {print}'
 Here, Filters processes running for more than 1 minute.
 
-✅ List All User Names With Running Processes
+# ✅ List All User Names With Running Processes
 ps -eo user= | sort | uniq
 
-✅ Top Processes by Virtual Memory (VSZ)
+# ✅ Top Processes by Virtual Memory (VSZ)
 ps -eo pid,cmd,vsz --sort=-vsz | head -n 6
 
-✅ Show Parent-Child Process Tree
+# ✅ Show Parent-Child Process Tree
 ps -ejH or pstree -p
 
-✅ Show Processes That Exceed 500MB RAM
+# ✅ Show Processes That Exceed 500MB RAM
 ps -eo pid,cmd,rss --sort=-rss | awk '$3 > 512000'
 Here, rss is in KB; 512000 KB = 500 MB
 
-✅ Kill Processes Consuming Too Much CPU
+# ✅ Kill Processes Consuming Too Much CPU
 ps -eo pid,%cpu --sort=-%cpu | awk '$2>80 {print $1}' | xargs -r kill -9
 
-✅ Show Only Running (R) Processes
+# ✅ Show Only Running (R) Processes
 ps aux | awk '$8=="R" {print $2, $11}'
 
-🔧 Bonus Tip: Save to File for Logging
+# 🔧 Bonus Tip: Save to File for Logging
 ps -eo pid,cmd,%cpu,%mem --sort=-%cpu | head -n 6 >> /var/log/proc_top.log
 
