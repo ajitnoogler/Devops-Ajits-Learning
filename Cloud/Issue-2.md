@@ -190,5 +190,77 @@ sudo ufw status verbose
 | Client Logs      | DNS issues, timeouts, intermittent 502  |
 
 ---
+# Sample Logs
+
+Here is a **sample troubleshooting log snippet** from various sources relevant to an OCI Load Balancer issue — helpful when diagnosing application or backend failure:
+
+---
+
+### 🔹 1. **Load Balancer Access Log (HTTP Request Failures)**
+
+Path:
+`/logs/<load_balancer_id>/access.log` or through **OCI Logging → Service Logs → Load Balancer**
+
+```
+2025-07-07T11:45:02.123Z - 203.0.113.25 - GET /app - 502 - "Bad Gateway" - backend server returned 500
+2025-07-07T11:45:10.981Z - 203.0.113.25 - GET /login - 504 - "Gateway Timeout" - upstream timed out (15s)
+```
+
+🧠 **Interpretation**:
+
+* **502** = App crashed or didn't respond properly
+* **504** = Backend is slow or unresponsive
+
+---
+
+### 🔹 2. **Backend Set Health Log (via CLI or Console)**
+
+Command:
+
+```bash
+oci lb backend-set get-health \
+  --load-balancer-id ocid1.loadbalancer.oc1..xyz \
+  --backend-set-name my-backend-set
+```
+
+Sample Output:
+
+```json
+{
+  "status": "CRITICAL",
+  "backends": [
+    {
+      "ip-address": "10.0.1.5",
+      "status": "CRITICAL",
+      "statusDetails": "Health check failed with status 500",
+      "healthCheckResults": [
+        {
+          "timestamp": "2025-07-07T11:45:10Z",
+          "responseCode": 500,
+          "status": "FAIL"
+        }
+      ]
+    }
+  ]
+}
+```
+
+🧠 **Interpretation**: App is reachable, but returns HTTP 500 (server error) during health checks.
+
+---
+
+### 🔹 3. **Web App VM Log (e.g. `/var/log/nginx/error.log`)**
+
+```bash
+2025/07/07 11:45:10 [error] 1234#1234: *45 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.0.3, server: , request: "GET /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login"
+```
+
+🧠 **Interpretation**:
+
+* App behind nginx is not responding in time
+* Could be due to high CPU, memory leak, or database issue
+
+---
+
 
 ![9530d969-defd-4102-88c0-4c5d0d7d4e62](https://github.com/user-attachments/assets/3e1b7ecc-2d26-44a9-950c-8ccd1d1171e3)
