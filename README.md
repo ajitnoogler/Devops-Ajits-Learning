@@ -6,7 +6,7 @@ But things changed when I started learning DevOps with Abhishek Veeramalla. That
 
 I had gone through a few Python courses before, but they never really clicked. With Abhishek’s practical, hands-on style, I started to enjoy it — and more importantly, understand it as he integrated Python training with DevOps mindset and use-cases.
 
-To be honest, I used to think AI might replace developers one day. But in my case, AI feels more like a Brother, a friend, a coding buddy — who takes my hand and guides me, especially when I’m stuck or frustrated with debugging. Tools like ChatGPT and IntelliSense in VSCode have made learning smoother and much less intimidating. 
+To be honest, I used to think AI might replace developers one day. But in my case, AI feels more like a Brother, a friend, a coding buddy — who takes my hand and guides me, especially when I’m stuck or frustrated with debugging. Tools like IntelliSense and AI in VSCode have made learning smoother and much less intimidating. 
 
 * It's always best to utilize AI when you feel now more time is wasted behind debugging.
 
