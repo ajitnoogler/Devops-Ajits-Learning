@@ -1,4 +1,3 @@
-
 # ✅ Top 5 CPU & Memory -Consuming Processes
 
 (.venv) @ajitnoogler ➜ ~ $  ps -eo pid,ppid,cmd,%cpu,%mem --sort=-%mem | head -n 6
