@@ -26,58 +26,58 @@ ps -eo pid,ppid,cmd,%cpu,%mem --sort=-%mem | head -n 6
 
 
 # ✅ Find All Running Java Processes
-ps aux | grep java | grep -v grep | awk '{print $4, $2, $11}' | sort -k1 -nr
+$ ps aux | grep java | grep -v grep | awk '{print $4, $2, $11}' | sort -k1 -nr
 
 # ✅ Find All Zombie Processes
-ps aux | awk '$8=="Z" {print $2, $11}'
+$ ps aux | awk '$8=="Z" {print $2, $11}'
 Here, $8=="Z" → Zombie state in the STAT column
 
 # ✅  Show Top 10 Processes by Threads
-ps -eo pid,ppid,cmd,nlwp --sort=-nlwp | head -n 11
+$ ps -eo pid,ppid,cmd,nlwp --sort=-nlwp | head -n 11
 Here, nlwp = Number of threads
 
 # ✅ Monitor Processes Using a Specific Port (e.g., 443)
-lsof -i :443  or  netstat -tunlp | grep :443
+$ lsof -i :443  or  netstat -tunlp | grep :443
 
 # ✅ Find All Processes by a Specific User
-ps -u username -o pid,cmd,%cpu,%mem --sort=-%cpu
+$ ps -u username -o pid,cmd,%cpu,%mem --sort=-%cpu
 
 # ✅ Monitor a Process in Real-Time Every 2 Seconds
-watch -n 2 'ps -eo pid,cmd,%cpu,%mem --sort=-%cpu | head -n 6'
+$ watch -n 2 'ps -eo pid,cmd,%cpu,%mem --sort=-%cpu | head -n 6'
 
 # ✅ Find All Stopped or Sleeping Processes
-ps aux | awk '$8 ~ /S|T/ {print $1, $2, $8, $11}'
+$ ps aux | awk '$8 ~ /S|T/ {print $1, $2, $8, $11}'
 S = sleeping, T = stopped
 
 # ✅ Count Running Instances of a Process
-ps aux | grep -v grep | grep nginx | wc -l
+$ ps aux | grep -v grep | grep nginx | wc -l
 
 # ✅ Total CPU & MEM Used by a Specific App
-ps aux | grep nginx | grep -v grep | awk '{cpu+=$3; mem+=$4} END {print "CPU:", cpu, "MEM:", mem}'
+$ ps aux | grep nginx | grep -v grep | awk '{cpu+=$3; mem+=$4} END {print "CPU:", cpu, "MEM:", mem}'
 
 # ✅ Identify High CPU Usage for More Than 1 Minute
-ps -eo pid,etime,cmd,%cpu --sort=-%cpu | awk '$2 ~ /[0-9]+:[0-9][0-9]/ {print}'
+$ ps -eo pid,etime,cmd,%cpu --sort=-%cpu | awk '$2 ~ /[0-9]+:[0-9][0-9]/ {print}'
 Here, Filters processes running for more than 1 minute.
 
 # ✅ List All User Names With Running Processes
-ps -eo user= | sort | uniq
+$ ps -eo user= | sort | uniq
 
 # ✅ Top Processes by Virtual Memory (VSZ)
-ps -eo pid,cmd,vsz --sort=-vsz | head -n 6
+$ ps -eo pid,cmd,vsz --sort=-vsz | head -n 6
 
 # ✅ Show Parent-Child Process Tree
-ps -ejH or pstree -p
+$ ps -ejH or pstree -p
 
 # ✅ Show Processes That Exceed 500MB RAM
-ps -eo pid,cmd,rss --sort=-rss | awk '$3 > 512000'
+$ ps -eo pid,cmd,rss --sort=-rss | awk '$3 > 512000'
 Here, rss is in KB; 512000 KB = 500 MB
 
 # ✅ Kill Processes Consuming Too Much CPU
-ps -eo pid,%cpu --sort=-%cpu | awk '$2>80 {print $1}' | xargs -r kill -9
+$ ps -eo pid,%cpu --sort=-%cpu | awk '$2>80 {print $1}' | xargs -r kill -9
 
 # ✅ Show Only Running (R) Processes
-ps aux | awk '$8=="R" {print $2, $11}'
+$ ps aux | awk '$8=="R" {print $2, $11}'
 
 # 🔧 Bonus Tip: Save to File for Logging
-ps -eo pid,cmd,%cpu,%mem --sort=-%cpu | head -n 6 >> /var/log/proc_top.log
+$ ps -eo pid,cmd,%cpu,%mem --sort=-%cpu | head -n 6 >> /var/log/proc_top.log
 
