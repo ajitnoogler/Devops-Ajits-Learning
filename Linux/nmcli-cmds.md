@@ -102,5 +102,3 @@ Connection 'static-lan' (d9fb27a1-cab1-4c0e-bf61-5877616b47d4) successfully dele
 ```
 
 ---
-
-Would you like me to generate these into a `.md` or `.txt` file with explanation blocks for a lab guide or training material?
