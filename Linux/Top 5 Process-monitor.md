@@ -1,7 +1,7 @@
 
 # ✅ Top 5 CPU & Memory -Consuming Processes
 
-@patelpayal8 ➜ /workspaces/Devops-Learning (main) $ ps -eo pid,ppid,cmd,%cpu,%mem --sort=-%mem | head -n 6
+(.venv) @ajitnoogler ➜ ~ $  ps -eo pid,ppid,cmd,%cpu,%mem --sort=-%mem | head -n 6
 
     PID    PPID CMD                         %CPU %MEM
     590     569 /vscode/bin/linux-x64/2901c 58.0 14.4
@@ -12,7 +12,7 @@
 
 
 
-@patelpayal8 ➜ /workspaces/Devops-Learning (main) $ ps aux | awk 'NR>1 {print $0 | "sort -k4 -nr"}' | head -n 5
+(.venv) @ajitnoogler ➜ ~ $ ps aux | awk 'NR>1 {print $0 | "sort -k4 -nr"}' | head -n 5
 
 codespa+     590 24.7 12.2 65851412 999512 ?     Sl   09:01   0:21 /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node --dns-result-order=ipv4first /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
 codespa+    2136  9.1  5.3 12997932 433772 ?     Sl   09:01   0:05 /vscode/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node /home/codespace/.vscode-remote/extensions/ms-python.vscode-pylance-2025.6.2/dist/server.bundle.js --cancellationReceive=file:242b90db177092fa4a1c15f7dda0350c05977db877 --node-ipc --clientProcessId=590
