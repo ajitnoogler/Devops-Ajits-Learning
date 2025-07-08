@@ -32,6 +32,7 @@ $ cut -d" " -f6 dpkg.log | sort | uniq
 
 $ cut -d" " -f6 dpkg.log | sort | uniq -c // with count.
 
+
 $ grep -E 'error|fail|critical' /var/log/access.log      // Extended regex
 
 $ grep -rEi 'error|fail|critical' /var/log/access.log    // Search recursively in all .log files
