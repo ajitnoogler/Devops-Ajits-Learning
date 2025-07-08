@@ -46,6 +46,21 @@ $ grep --color=always -Ei 'error|fail|critical' /var/log/access.log    //  Highl
 
 $ grep -nE 'error|fail|critical' /var/log/access.log    //  Show matching lines with line numbers
 
+$ ifconfig | grep -i inet | awk '{print $1, $2, $4}'
+
+$ ifconfig | grep -i "inet" | awk '{print $1, $2, $4}'
+inet 172.17.0.1 255.255.0.0
+inet 10.0.0.134 255.255.0.0
+inet6 fe80::7e1e:52ff:fe05:adab 64
+inet 127.0.0.1 255.0.0.0
+inet6 ::1 128
+
+$ ifconfig | grep -i "inet" | grep -v "inet6" | awk '{print $1, $2, $4}'   // -v Excludes line containing inet6
+inet 172.17.0.1 255.255.0.0
+inet 10.0.0.134 255.255.0.0
+inet 127.0.0.1 255.0.0.0
+
+
 # Search using a pattern file (for many strings)
 Create a file called patterns.txt: Write below pattern.
 error
@@ -77,3 +92,38 @@ $ grep -Ff patterns.txt log.txt
 | `type`    | Tells you **how a command is interpreted** (builtin, alias, etc.) | `type cd` → `cd is a shell builtin`         |
 
 
+
+# access.log Analysis:
+
+$ grep -E '404|500|timeout' access.log
+
+$ grep -e '404' -e '500' -e 'timeout' access.log    // e for multiple options
+
+$ grep -iE 'error|fail|timeout' access.log    //  Case-insensitive multiple patterns
+
+$ grep --color=always -E '500|timeout|fail' access.log  // Search and highlight matches
+
+$ grep -rE '500|404|timeout' /var/log/ // Search recursively in log directory
+
+$ grep -E '500|timeout' access*.log // Grep from multiple files
+
+$ grep -oE '404|500|timeout' access.log  // Get only matched part (not whole line)
+
+$ grep -oE '404|500|timeout' access.log | sort | uniq -c | sort -nr   // Count how many times each term appeared 🔹 Get frequency of each match — great for dashboards or alerts.
+
+$ grep -E '2025:14:[0-9]{2}:[0-9]{2}.*(404|500)' access.log    // Match patterns with timestamps (combined filtering) 🔹 Extract 404/500 errors during 2025:14:XX:XX time.
+
+$ grep -E '404|500' access.log | awk '{print $1, $4, $9}'  // Bonus: Combine with awk for field-level filtering 🔹 Shows IP, timestamp, and HTTP status.
+
+ 
+# Use a pattern file for large search lists
+Create a patterns.txt: write below in file
+  404
+  500
+  timeout
+  unauthorized
+
+$ grep -Ff patterns.txt access.log
+🔹 -F: fixed string search (no regex)
+🔹 -f: read patterns from file
+  
