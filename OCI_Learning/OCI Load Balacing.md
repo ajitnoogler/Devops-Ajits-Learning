@@ -5,9 +5,9 @@
 
 # When to use ALB | NLB | GwLB
 ALB - Application LB: when you want to perform loadbalancing on Layer 7 application layer (Costly and Slow) 
-i.e HTTP | HTTPS | SSL-TLS Offloading-Termination | WAF Integration | Pathbased-URL Based Routing | Host-Based-Routing based on Host Header in HTTP Request # Youtube like streaming service | Gaming Server etc.
+i.e HTTP | HTTPS | SSL-TLS Offloading-Termination | WAF Integration | Pathbased-URL Based Routing | Host-Based-Routing based on Host Header in HTTP Request 
 
-NLB - Network LB: When you want to perform loadbalancing on Layer 4 TCP and UDP traffic and requirement is extremely low latency. 
+NLB - Network LB: When you want to perform loadbalancing on Layer 4 TCP and UDP traffic and requirement is extremely low latency.  # Youtube like streaming service | Gaming Server etc.
 i.e To Preserve SRC-IP | TLS Termination on NGFW 
 
 GwLb - Not available in OCI, workaround with VCN routing + NGFW.
