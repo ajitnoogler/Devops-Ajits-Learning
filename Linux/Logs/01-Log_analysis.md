@@ -93,7 +93,20 @@ $ grep -Ff patterns.txt log.txt
 
 
 
-# access.log Analysis:
+# Access.log Analysis:
+
+# 🚨 Top IPs making requests:
+
+$ cut -d' ' -f1 access.log | sort | uniq -c | sort -nr | head
+482 66.249.73.135
+364 46.105.14.53
+
+| Count | IP Address    | Meaning                                        |
+| ----- | ------------- | ---------------------------------------------- |
+| 482   | 66.249.73.135 | This IP made 482 requests (likely a Googlebot) |
+| 364   | 46.105.14.53  | Made 364 requests                              |
+| ...   | ...           | ...                                            |
+
 
 $ grep -E '404|500|timeout' access.log
 
