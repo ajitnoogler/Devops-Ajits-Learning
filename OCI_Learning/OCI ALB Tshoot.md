@@ -44,8 +44,9 @@ Users report they **cannot access a backend server** (e.g., web app or API) host
 
   ```bash
   curl -v http://<ALB-DNS-Name>  # or https://
-  nc -zv <ALB-IP or DNS> 80      # For HTTP
-  nc -zv <ALB-IP or DNS> 443     # For HTTPS
+  telnet <alb-dns-name> 80    # For HTTP
+  telnet <alb-dns-name> 443   # For HTTPS    
+  nc -zv <ALB-IP or DNS> 443    
   ```
 
 * ❓Error Codes to note:
