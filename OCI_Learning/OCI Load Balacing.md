@@ -135,6 +135,34 @@ Physical Layer     - Physical Connectivity (Bit by Bit Transmission)
 | **Physical Layer (Layer 1)**     | Bit-level transmission over cable/wireless medium (e.g., Ethernet, Wi-Fi).                                                                       |
 
 
+# What is SSL Offloading?
+SSL Offloading is the process of terminating SSL/TLS encryption at a load balancer or proxy, instead of letting the backend servers handle encryption/decryption.
+# Where SSL Offloading is Used:
+At Load Balancers (e.g., AWS ALB, OCI Load Balancer, NGINX, F5, etc.)
+Often used in reverse proxy or frontend gateway roles.
+
+# 🧠 Purpose:
+Reduce CPU load on backend servers (no SSL compute cost).
+Centralize certificate management (upload SSL cert only to LB).
+Enable Layer 7 features (host/path-based routing, WAF inspection).
+
+# Flow Example:
+Client ──HTTPS──▶ Load Balancer (SSL Offload)
+                └──HTTP──▶ Backend Server (plaintext)
+
+# 🔬 Key Differences: SSL Offloading vs SSL Decryption
+
+| Feature                  | **SSL Offloading**                | **SSL Decryption (Palo Alto)**                           |
+| ------------------------ | --------------------------------- | -------------------------------------------------------- |
+| **Primary Goal**         | Performance & L7 routing          | Security inspection                                      |
+| **Where Used**           | Load balancer / proxy             | Firewall (NGFW)                                          |
+| **Terminates SSL?**      | Yes                               | Yes, temporarily for inspection                          |
+| **Re-encrypts traffic?** | Optional (Passthrough or offload) | Yes (by default, to preserve secure session)             |
+| **Target Traffic**       | Inbound app traffic               | Inbound or outbound encrypted traffic                    |
+| **End user visibility**  | Transparent                       | May require installing **forward trust cert** on clients |
+| **Typical Products**     | ALB, NGINX, OCI LB, F5            | Palo Alto NGFW, Fortinet, Checkpoint                     |
+| **Common Use Case**      | Load balancing HTTPS apps         | Blocking malware in HTTPS traffic, DLP, URL filtering    |
+
 
 # OCI GWLB-Like Inline Firewall Architecture Diagram:
 
