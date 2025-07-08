@@ -98,7 +98,9 @@ $ grep -Ff patterns.txt log.txt
 # 🚨 Top IPs making requests:
 
 $ cut -d' ' -f1 access.log | sort | uniq -c | sort -nr | head
+
 482 66.249.73.135
+
 364 46.105.14.53
 
 | Count | IP Address    | Meaning                                        |
