@@ -109,6 +109,25 @@ $ cut -d' ' -f1 access.log | sort | uniq -c | sort -nr | head
 | 364   | 46.105.14.53  | Made 364 requests                              |
 | ...   | ...           | ...                                            |
 
+# 👀 Top URLs requested:
+$ cut -d'"' -f2 access.log | cut -d' ' -f2 | sort | uniq -c | sort -nr | head
+    807 /favicon.ico
+    
+    546 /style2.css
+
+# 🔥 Most common status codes:
+$  cut -d'"' -f3 access.log | cut -d' ' -f2 | sort | uniq -c | sort -nr
+ 9126 200
+ 
+  445 304
+  
+| Count | Status Code | Meaning                 |
+| ----- | ----------- | ----------------------- |
+| 9126  | 200         | OK (successful request) |
+| 445   | 304         | Not Modified (cached)   |
+| 123   | 404         | Not Found               |
+| 89    | 500         | Internal Server Error   |
+
 
 $ grep -E '404|500|timeout' access.log
 
