@@ -118,9 +118,13 @@ $ grep -E '404|500' access.log | awk '{print $1, $4, $9}'  // Bonus: Combine wit
  
 # Use a pattern file for large search lists
 Create a patterns.txt: write below in file
+
   404
+  
   500
+  
   timeout
+  
   unauthorized
 
 $ grep -Ff patterns.txt access.log
