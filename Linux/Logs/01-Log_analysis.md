@@ -121,12 +121,21 @@ $ grep -i "GET" | awk -F '-' '{print $1, $2, $3, $4, $5}' access.log
 180.76.6.56     [20/May/2015:21:05:56 +0000] "GET /robots.txt HTTP/1.1" 200   " " "Mozilla/5.0 (Windows NT 5.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2"
 46.105.14.53     [20/May/2015:21:05:15 +0000] "GET /blog/tags/puppet?flav=rss20 HTTP/1.1" 200 14872 " " "UniversalFeedParser/4.2 pre
 
-$ grep -i "GET" | awk -F '-' '{print $1}' access.log | uniq
+$ grep -i "GET" | awk -F '-' '{print $1}' access.log | uniq     // -F Field Separator.
 
 180.76.6.56 
 
 46.105.14.53 
- 
+
+$ egrep -i 'GET|POST' access.log
+
+$ egrep -i 'GET|POST' access.log | awk -F '-' '{print $1, $2, $3, $4, $5}' access.log 
+66.249.73.135     [20/May/2015:21:05:00 +0000] "GET /?flav=atom HTTP/1.1" 200 32352 " " "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 
+180.76.6.56     [20/May/2015:21:05:56 +0000] "GET /robots.txt HTTP/1.1" 200   " " "Mozilla/5.0 (Windows NT 5.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2"
+
+$ egrep -i 'GET|POST' access.log | awk -F '-' '{print $1, $2, $3, $4, $5}' | uniq -c access.log 
+
+
 # Use a pattern file for large search lists
 Create a patterns.txt: write below in file
 
