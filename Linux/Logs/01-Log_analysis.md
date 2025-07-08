@@ -115,6 +115,17 @@ $ grep -E '2025:14:[0-9]{2}:[0-9]{2}.*(404|500)' access.log    // Match patterns
 
 $ grep -E '404|500' access.log | awk '{print $1, $4, $9}'  // Bonus: Combine with awk for field-level filtering 🔹 Shows IP, timestamp, and HTTP status.
 
+$ grep -i "GET" | awk -F '-' '{print $1}' access.log 
+
+$ grep -i "GET" | awk -F '-' '{print $1, $2, $3, $4, $5}' access.log 
+180.76.6.56     [20/May/2015:21:05:56 +0000] "GET /robots.txt HTTP/1.1" 200   " " "Mozilla/5.0 (Windows NT 5.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2"
+46.105.14.53     [20/May/2015:21:05:15 +0000] "GET /blog/tags/puppet?flav=rss20 HTTP/1.1" 200 14872 " " "UniversalFeedParser/4.2 pre
+
+$ grep -i "GET" | awk -F '-' '{print $1}' access.log | uniq
+
+180.76.6.56 
+
+46.105.14.53 
  
 # Use a pattern file for large search lists
 Create a patterns.txt: write below in file
