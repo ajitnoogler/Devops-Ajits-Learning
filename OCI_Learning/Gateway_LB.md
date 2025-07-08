@@ -8,6 +8,7 @@ Its used to for Geo Loadbalancing it front face VPN i.e Global Protect VPN or Fi
 
 ![image](https://github.com/user-attachments/assets/9787261d-b302-4f06-998b-ca8464126aee)
 
+Ref: https://www.paloaltonetworks.com/blog/network-security/vm-series-integration-with-aws-gateway-loadbalancer/
 
 # 🔐 **OCI Gateway Load Balancer (GWLB) – Use Case**
 
