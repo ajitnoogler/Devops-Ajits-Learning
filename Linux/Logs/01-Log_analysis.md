@@ -17,3 +17,15 @@ $ awk '{print $1, $2}' /var/log/dpkg.log
 $ awk '{print $1, $2, $5, $6}' dpkg.log 
 2025-05-30 12:49:43 libc-bin:amd64 2.39-0ubuntu8.4
 2025-05-30 12:49:43 libc-bin:amd64 2.39-0ubuntu8.4
+
+$ awk '{print $1, $2, $3, $5, $6}' dpkg.log | grep 'status'
+2025-05-30 12:49:43 status libc-bin:amd64 2.39-0ubuntu8.4
+2025-05-30 12:49:43 status libc-bin:amd64 2.39-0ubuntu8.4
+
+$ cut -d" " -f6 dpkg.log 
+2.39-0ubuntu8.4
+2.39-0ubuntu8.4
+
+$ cut -d" " -f6 dpkg.log | sort
+
+$ cut -d" " -f6 dpkg.log | sort | uniq
