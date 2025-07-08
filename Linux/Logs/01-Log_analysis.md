@@ -29,3 +29,18 @@ $ cut -d" " -f6 dpkg.log
 $ cut -d" " -f6 dpkg.log | sort
 
 $ cut -d" " -f6 dpkg.log | sort | uniq
+$ cut -d" " -f6 dpkg.log | sort | uniq -c // with count.
+
+$ grep -E 'error|fail|critical' log.txt  // Extended regex
+$ grep -rEi 'error|fail|critical' /var/log/
+$ grep -iE 'error|fail|critical' log.txt
+$ grep --color=always -Ei 'error|fail|critical' log.txt
+
+# Search using a pattern file (for many strings)
+Create a file called patterns.txt: Write below pattern.
+error
+fail
+critical
+timeout
+
+$ grep -Ff patterns.txt log.txt
