@@ -32,15 +32,15 @@ $ cut -d" " -f6 dpkg.log | sort | uniq
 
 $ cut -d" " -f6 dpkg.log | sort | uniq -c // with count.
 
-$ grep -E 'error|fail|critical' log.txt  // Extended regex
+$ grep -E 'error|fail|critical' /var/log/access.log      // Extended regex
 
-$ grep -rEi 'error|fail|critical' /var/log/    // Search recursively in all .log files
+$ grep -rEi 'error|fail|critical' /var/log/access.log    // Search recursively in all .log files
 
-$ grep -iE 'error|fail|critical' log.txt
+$ grep -iE 'error|fail|critical' /var/log/access.log
 
-$ grep --color=always -Ei 'error|fail|critical' log.txt  //  Highlight matches
+$ grep --color=always -Ei 'error|fail|critical' /var/log/access.log    //  Highlight matches
 
-$ grep -nE 'error|fail|critical' log.txt //  Show matching lines with line numbers
+$ grep -nE 'error|fail|critical' /var/log/access.log    //  Show matching lines with line numbers
 
 # Search using a pattern file (for many strings)
 Create a file called patterns.txt: Write below pattern.
