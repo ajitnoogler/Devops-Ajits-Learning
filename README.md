@@ -11,3 +11,5 @@ To be honest, I used to think AI might replace developers one day. But in my cas
 * It's always best to utilize AI when you feel now more time is wasted behind debugging.
 
 Now, I’m genuinely excited about skilling up. Over the next few months, my goal is to start writing automation scripts — maybe not super complex right away, but definitely practical. And with time, I’ll get better and more confident.
+
+** Try to View Files in Code and Blame Mode **
