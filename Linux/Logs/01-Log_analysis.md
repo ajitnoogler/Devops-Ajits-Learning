@@ -32,9 +32,10 @@ $ cut -d" " -f6 dpkg.log | sort | uniq
 $ cut -d" " -f6 dpkg.log | sort | uniq -c // with count.
 
 $ grep -E 'error|fail|critical' log.txt  // Extended regex
-$ grep -rEi 'error|fail|critical' /var/log/
+$ grep -rEi 'error|fail|critical' /var/log/    // Search recursively in all .log files
 $ grep -iE 'error|fail|critical' log.txt
-$ grep --color=always -Ei 'error|fail|critical' log.txt
+$ grep --color=always -Ei 'error|fail|critical' log.txt  //  Highlight matches
+$ grep -nE 'error|fail|critical' log.txt //  Show matching lines with line numbers
 
 # Search using a pattern file (for many strings)
 Create a file called patterns.txt: Write below pattern.
@@ -44,3 +45,17 @@ critical
 timeout
 
 $ grep -Ff patterns.txt log.txt
+
+# 📌 Summary Table
+
+| Purpose                     | Command                       |                  |               |
+| --------------------------- | ----------------------------- | ---------------- | ------------- |
+| Match multiple strings      | \`grep -E 'one                | two              | three' file\` |
+| Use multiple `-e` flags     | `grep -e 'one' -e 'two' file` |                  |               |
+| Case-insensitive            | \`grep -iE 'one               | two' file\`      |               |
+| Use pattern file            | `grep -Ff patterns.txt file`  |                  |               |
+| Show line numbers           | \`grep -nE 'one               | two' file\`      |               |
+| Search all logs recursively | \`grep -rEi 'one              | two' /var/log/\` |               |
+| Highlight matches           | \`grep --color=always -E 'one | two' file\`      |               |
+
+
