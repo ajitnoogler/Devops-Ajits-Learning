@@ -68,3 +68,12 @@ $ grep -Ff patterns.txt log.txt
 | Highlight matches           | \`grep --color=always -E 'one | two' file\`      |               |
 
 
+# Whereis and which cmd:
+
+| Command   | What it does                                                      | Use Case Example                            |
+| --------- | ----------------------------------------------------------------- | ------------------------------------------- |
+| `which`   | Shows the **exact path** of a command in your `PATH`              | `which python` → `/usr/bin/python`          |
+| `whereis` | Locates **binary**, **source**, and **man page** files            | `whereis ls` → `/bin/ls /usr/share/man/...` |
+| `type`    | Tells you **how a command is interpreted** (builtin, alias, etc.) | `type cd` → `cd is a shell builtin`         |
+
+
