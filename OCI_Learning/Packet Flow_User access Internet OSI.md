@@ -12,10 +12,15 @@
 
 
 Application Layer  - https://www.linkedIn.com
+
 Presentation Layer - Secure Request SSL/TLS.
+
 Session Layer      - Session Setup and maintainance.
 
 Transport Layer    - TCP Port Assignement -  In our case src-port 32345 Dst-Port 443 - 3-way Handhsake | Segmentation
+
 Network Layer      - IP addressing and Routing - SRC-IP | DST-IP | Protocol
+
 DataLink Layer     - Mac-Addressing, ARP, Frame encap, Switch mac-learning and Hop by Hop Mac-add Learning.
+
 Physical Layer     - Physical Connectivity (Bit by Bit Transmission)
