@@ -47,8 +47,8 @@ Function:
 --- 
 
             +----------------+
-            |    Server      |
-            |  (with Website)| Node Exporter (/metrics) running on server.
+            |     Server     |
+            |    (webapp)    | Node Exporter (/metrics) running on server.
             +----------------+
                      |           
             Blackbox Exporter (/metrics) VM or Instance
