@@ -56,11 +56,11 @@ Function:
            +-----------+-------------+
                        |
                   +-----------+
-                  | Prometheus |
+                  | Prometheus |  Raw Metrics
                   +-----------+
                        |
                   +-----------+
-                  |  Grafana   |
+                  |  Grafana   |  Convert Raw Metrics to visualisation (Graphs & Charts)
                   +-----------+
                    /    |     \
         +----------+   +-------+   +--------+
