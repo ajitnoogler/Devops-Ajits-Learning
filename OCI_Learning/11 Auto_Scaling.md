@@ -12,6 +12,9 @@
 
    - RDS PostgreSQL upgraded from db.t3.medium to db.r6i.4xlarge
 
+### Autoscaler Event Triggers:
+   - Metric based -> Performance metrics like CPU,  Memory
+   - Schedule based -> Its trigger at Admin defined scheduled i.e Amazon or Flipkart Big Billion Day Sale | Black Friday Sale etc.
 ---
 
 ### 🔍 Summary
