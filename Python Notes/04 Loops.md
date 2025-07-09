@@ -11,6 +11,17 @@ if disk_usage > 90:
     print("🔴 Disk usage critical!")
 else:
     print("🟢 Disk usage normal.")
+
+
+# Ask user for disk usage as input
+disk_usage = int(input("Enter disk usage percentage: "))
+
+# Conditional check
+if disk_usage > 90:
+    print("🔴 Disk usage critical!")
+else:
+    print("🟢 Disk usage normal.")
+
 ```
 
 ---
