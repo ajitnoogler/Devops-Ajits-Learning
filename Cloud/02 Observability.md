@@ -49,10 +49,10 @@ Function:
 
                  +----------------+
                  |     Server     |
-                 |    (webapp)    |  ← Node Exporter (/metrics) runs on this server
+                 |    (webapp)    |  ← Node Exporter (/metrics) runs on this server TCP port 9100
                  +----------------+
                           |
-       Blackbox Exporter (/metrics) — runs on a separate VM or instance
+       Blackbox Exporter (/metrics) — runs on a separate VM or instance TCP Port 9115
                           |
              +------------+------------+
                           |
