@@ -40,7 +40,7 @@ Function:
 - Collect metrics from instance / node i.e "xyz.com/.../metrics" or "IP:xxx/.../metrics"
 - Exporters, collects the metric and keep it on instance | VM under xyz.com/metrics folder for Promethues to collect metric (common exporter: node exporter | Blackbox exporter)
 - node-exporter is installed on the vm | server | instance | container. TCP Port 9100.
-- Blackbox exporter can be installed on vm | server | instance | container. It send request to webapp via url.
+- Blackbox exporter can be installed on vm | server | instance | container. It send request / probe to webapp via url.
 - Prometheus access /metric folder to collect metric of the server. /metrics is also called metrics endpoint.
 - Prometheus collects raw metric which is difficult to understand hence so in order to get raw data in proper format Graphana comes into picture.
 - Graphana is visualisation tool, The data collected by Prometheus is shared to Graphana for visualisation, for creating charts, graphs etc. Now it is human understandable format.
