@@ -31,6 +31,10 @@
 
 
 
+
+
+
+
 [Initiator]                                            [Responder]
      |                                                       |
      | ----> 1. IKE_SA_INIT (Main Mode) --------------------> |
