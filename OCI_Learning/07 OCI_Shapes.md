@@ -5,6 +5,11 @@
 Instance Type: Bare Metal | VM
 Shape Series: AMD | Intel | ARM | 
 
+# 🔍 How to List Your Available Shapes:
+oci compute shape list --compartment-id $COMPARTMENT_OCID --all
+
+** Note -- Free / Legacy	VM.Standard.E2.1.Micro	Lightweight/free-tier experimental use **
+
 AMD
 
     VM.Standard.E3.Flex: 1–114 OCPUs, 1–1,776 GB RAM
