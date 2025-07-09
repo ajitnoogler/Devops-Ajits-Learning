@@ -206,6 +206,8 @@ for srv, ip in zip(servers, ips):
 ```
 
 
+
+
 ## ✅ **When to Use Which Conditional Statements & Loops**
 
 ### 🔍 **1. `if`, `elif`, `else` — Used for Decision Making**
