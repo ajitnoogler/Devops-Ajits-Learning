@@ -202,5 +202,3 @@ iperf3 -c 10.0.2.10 -u -b 1G
 | **TCP Window Size**      | Insufficient TCP buffer size or congestion control issues                            | Use `iperf3 -w 512K` or adjust sysctl TCP settings          |
 | **MTU mismatch**         | MTU not set correctly (especially over VPN)                                          | Run `ping -M do -s 1472 <target>` to test for fragmentation |
 | **Background Processes** | Other traffic on NIC consuming bandwidth                                             | Monitor with `iftop`, `nload`, or `netstat -s`              |
-
- 
