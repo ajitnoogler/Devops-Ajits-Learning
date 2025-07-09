@@ -1,12 +1,12 @@
 
 
-# Horizontal Scaling -  Add more instances (servers or nodes) to distribute the load.
+### Horizontal Scaling -  Add more instances (servers or nodes) to distribute the load.
 
    - Auto Scaling Group with 3 EC2 web servers behind an ALB
      
    - Amazon RDS Aurora with read replicas
 
-# Vertical Scaling -  Increase the resources (CPU, RAM, IOPS) of a single instance or upgrade instance type
+### Vertical Scaling -  Increase the resources (CPU, RAM, IOPS) of a single instance or upgrade instance type
 
    - Resize EC2 instance from t3.small to c6i.4xlarge for compute-heavy task
 
@@ -14,7 +14,7 @@
 
 ---
 
-# 🔍 Summary
+### 🔍 Summary
 
     - Horizontal scaling is better for high availability, distributed workloads, and cloud-native applications.
 
@@ -22,7 +22,7 @@
 
 ---
 
-# 📊 Comparison: Horizontal vs Vertical Scaling in AWS
+### 📊 Comparison: Horizontal vs Vertical Scaling in AWS
 
 | Feature                 | **Horizontal Scaling** (Scale Out/In)                        | **Vertical Scaling** (Scale Up/Down)                             |
 | ----------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------- |
