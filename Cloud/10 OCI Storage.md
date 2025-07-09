@@ -3,6 +3,18 @@
 
 Cloud storage is how cloud providers (like AWS or OCI) let you **store data remotely**, with different types based on use case:
 
+### Use Case:
+
+Object Storage is ideal for unstructured data, backups, and static websites.
+
+Block Storage is like a disk drive for your VM, good for OS, DBs.
+
+File Storage is used when multiple VMs need to share the same filesystem.
+
+Archive Storage is cold storage — very cheap, very slow.
+
+---
+
 ### 1. **Object Storage**
 
 * Stores **files (objects)** with metadata and unique identifiers.
