@@ -205,4 +205,130 @@ for srv, ip in zip(servers, ips):
     print(f"{srv} → {ip}")
 ```
 
+
+## ✅ **When to Use Which Conditional Statements & Loops**
+
+### 🔍 **1. `if`, `elif`, `else` — Used for Decision Making**
+
+| Use it when you want to...    | Example DevOps Scenario     |
+| ----------------------------- | --------------------------- |
+| ✅ Handle a single condition   | Check if disk usage > 90%   |
+| ✅ Handle multiple choices     | Match HTTP status codes     |
+| ✅ Fall back to a default case | Default to "OK" if no alert |
+
+```python
+if disk_usage > 90:
+    print("🔴 Critical")
+elif disk_usage > 70:
+    print("⚠️ Warning")
+else:
+    print("✅ Healthy")
+```
+
 ---
+
+### 🔐 **2. `Nested if` — For Sub-Conditions (Layered Checks)**
+
+| Use it when...                               | Example DevOps Use Case                        |
+| -------------------------------------------- | ---------------------------------------------- |
+| ✅ You need to check inside another condition | If user is admin → then check permission level |
+
+```python
+if user_logged_in:
+    if user_role == "admin":
+        print("Grant admin access")
+```
+
+---
+
+### 💡 **3. Short-hand `if-else` (Ternary Operator)**
+
+| Use it for...                      | Example                    |
+| ---------------------------------- | -------------------------- |
+| ✅ Very simple one-liner conditions | Set status based on a flag |
+
+```python
+status = "FAIL" if exit_code != 0 else "PASS"
+```
+
+---
+
+## 🔁 **When to Use Loops**
+
+### 🔄 **4. `for` Loop — For Known Iterations**
+
+| Use it to...                   | Example DevOps Use Case     |
+| ------------------------------ | --------------------------- |
+| ✅ Iterate over list of servers | Restart or ping each server |
+| ✅ Automate across environments | Deploy to dev/test/prod     |
+| ✅ Loop through ports/services  | Check if service is running |
+
+```python
+for server in ["web1", "web2", "db1"]:
+    print(f"Checking {server}")
+```
+
+---
+
+### 🔄 **5. `while` Loop — For Unknown or Retry Conditions**
+
+| Use it to...                          | Example DevOps Use Case          |
+| ------------------------------------- | -------------------------------- |
+| ✅ Retry until success or max attempts | Wait for a service to be healthy |
+| ✅ Keep checking until condition met   | Loop until response is 200       |
+
+```python
+attempt = 0
+while attempt < 3:
+    print("Trying to connect...")
+    attempt += 1
+```
+
+---
+
+### ✂️ **6. `break`, `continue` — Control Loop Execution**
+
+| Use it to...            | Example DevOps Use Case         |
+| ----------------------- | ------------------------------- |
+| ✅ Stop early on success | Break when server responds      |
+| ✅ Skip known issues     | Continue when service is 'none' |
+
+```python
+for service in services:
+    if service == "none":
+        continue
+    if check(service):
+        break
+```
+
+---
+
+### 🧠 **7. `else` with Loops — When Loop Doesn’t Break**
+
+| Use it to...                   | Example DevOps Use Case           |
+| ------------------------------ | --------------------------------- |
+| ✅ Alert only if item not found | Alert if no failed services found |
+
+```python
+for svc in services:
+    if svc == "failed":
+        print("Found failed service")
+        break
+else:
+    print("All services running")
+```
+
+---
+
+## 🚀 Summary Cheat Sheet
+
+| **Control Structure**  | **When to Use**                | **Typical DevOps Use Case**                 |
+| ---------------------- | ------------------------------ | ------------------------------------------- |
+| `if` / `elif` / `else` | Simple or multi-step decisions | Health checks, alerting, conditional deploy |
+| `for` loop             | Known items or count           | Iterate servers, configs, ports             |
+| `while` loop           | Retry or wait logic            | Wait for state or resource                  |
+| `break`                | Exit early on condition        | Exit after success                          |
+| `continue`             | Skip iteration                 | Skip known bad configs                      |
+| `nested if`            | Layered logic                  | Check multiple conditions step-by-step      |
+| `loop + else`          | All passes/failures handling   | Only alert if none match                    |
+
