@@ -46,4 +46,27 @@ Function:
 - Graphana is visualisation tool, The data collected by Prometheus is shared to Graphana for visualisation, for creating charts, graphs etc. Now it is human understandable format.
 --- 
 
+            +----------------+
+            |    Server      |
+            |  (with Website)| Node Exporter (/metrics) running on server.
+            +----------------+
+                     |           
+            Blackbox Exporter (/metrics) VM or Instance
+                     |                          
+           +-----------+-------------+
+                       |
+                  +-----------+
+                  | Prometheus |
+                  +-----------+
+                       |
+                  +-----------+
+                  |  Grafana   |
+                  +-----------+
+                   /    |     \
+        +----------+   +-------+   +--------+
+        |  Tables  |   | Charts |   | Graphs |
+        +----------+   +-------+   +--------+
+
+---
+
 
