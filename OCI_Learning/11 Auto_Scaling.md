@@ -1,6 +1,6 @@
 
 
-## Autoscaling is a cloud computing feature that automatically adjusts the resources allocated to an application or service based on demand. It dynamically scales resources up or down to match performance needs, ensuring optimal resource utilization and cost efficiency. 
+### Autoscaling is a cloud computing feature that automatically adjusts the resources allocated to an application or service based on demand. It dynamically scales resources up or down to match performance needs, ensuring optimal resource utilization and cost efficiency. 
 
 ### Horizontal Scaling -  Add more instances (servers or nodes) to distribute the load.
 
