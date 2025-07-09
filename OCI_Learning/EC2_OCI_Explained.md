@@ -6,18 +6,28 @@ A Compute Instance in OCI is a customizable server you can launch from an image 
 with selected CPU, memory, network, and disk options.
 It's the foundational building block for:
     - Hosting applications
+    
     - Running microservices
+    
     - Deploying databases
+    
     - Building container clusters (OKE)
+    
     - Setting up DevOps pipelines
+    
     - Hosting backend APIs, frontends, etc.
     
 # 🔒 Security and Control
   - SSH keys (no password logins)
+    
   - NSGs and Security Lists
+
   - OCI Identity & Access Management (IAM)
+    
   - Boot Volume encryption (AES-256)
+    
   - OCI Vault for key management
+    
 
 # 🧱 OCI Compute Instance Types (Shapes)
 
