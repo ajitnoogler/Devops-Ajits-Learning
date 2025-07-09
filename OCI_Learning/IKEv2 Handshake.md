@@ -16,13 +16,42 @@
 | ❌ **Dead Peer Detection (DPD) Failures** | Peer unreachable or DPD misconfigured                   | Check routing, DPD intervals, and peer availability                        |
 
 
+# 🧰 General Troubleshooting Checklist
 
+## 🧰 General Troubleshooting Checklist
 
+### ✅ Check Phase 1
 
+- Peer IP reachable (`ping`, `traceroute`)
+- UDP ports **500** and **4500** are open (for NAT-T)
+- Same **IKE version**, **DH group**, **encryption/hash/PRF**
+- Valid **PSK** or **certificates**
+- Matching **ID types** (e.g., `FQDN`, `IP`, `USER_FQDN`)
 
+---
 
+### ✅ Check Phase 2
 
+- Matching subnets in **Traffic Selectors** (TSi/TSr)
+- Same **encryption**, **hash**, and **PFS** settings
+- **NAT-T** enabled if behind NAT device
+- **Lifetime** values aligned (seconds, kilobytes)
 
+---
+
+### ✅ Use Diagnostic Tools
+
+- `tcpdump` or `wireshark` on **UDP 500/4500**
+- `strongswan.conf`, `ipsec statusall` (Linux/StrongSwan)
+- Cisco:
+  - `debug crypto isakmp`
+  - `debug ikev2 platform`
+- Fortinet:
+  - `show vpn ike-sa`
+  - `diagnose debug application ike -1`
+- Palo Alto:
+  - `show vpn ike-sa gateway`
+  - `debug ike gateway <name>`
 
 
 
