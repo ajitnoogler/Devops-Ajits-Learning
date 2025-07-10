@@ -62,16 +62,22 @@ For OCI (Oracle Cloud Infrastructure) Cloud Engineers, Oracle offers several cer
 
 [Foundational]
      ⬇️
+     
 OCI Foundations Associate (1Z0-1085)
      ⬇️
+     
 [Architecture or Operations Track]
      ⬇️
+     
 OCI Architect Associate (1Z0-1072) or Ops Associate (1Z0-1067)
      ⬇️
+     
 OCI Architect Professional (1Z0-997)
      ⬇️
+     
 [Specializations]
      ⬇️
+     
 OCI Security Professional (1Z0-1104)
      ➕ Developer Associate (Optional)
 
