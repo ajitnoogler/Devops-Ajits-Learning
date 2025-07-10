@@ -1,4 +1,23 @@
-Here's a detailed **packet flow** when an **internet user tries to access a web application** hosted in **Oracle Cloud Infrastructure (OCI)**, along with a **summary at the end**.
+**Packet flow** when an **internet user tries to access a web application** hosted in **Oracle Cloud Infrastructure (OCI)**, along with a **summary at the end**.
+
+---
+### 📦 Summary of Packet Flow
+
+```text
+[User] 
+  ↓ DNS Resolution
+[Public IP / LB IP]
+  ↓
+[OCI Public Load Balancer] 
+  ↓ (optional)
+[Gateway Load Balancer] → [NGFW: Traffic Inspection]
+  ↓
+[Web Server in Private Subnet]
+  ↓
+[App → DB or other internal tiers]
+  ↓
+[Response Sent Back via Same Path (Stateful)]
+```
 
 ---
 
@@ -81,7 +100,9 @@ Here's a detailed **packet flow** when an **internet user tries to access a web 
 
 ## ✅ Summary of Packet Flow (Internet to OCI Web App)
 
-```
+### 📦 Summary of Packet Flow
+
+```text
 [User] 
   ↓ DNS Resolution
 [Public IP / LB IP]
@@ -96,6 +117,7 @@ Here's a detailed **packet flow** when an **internet user tries to access a web 
   ↓
 [Response Sent Back via Same Path (Stateful)]
 ```
+
 
 ---
 
