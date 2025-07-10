@@ -28,9 +28,8 @@
                 +------------+     |
                 |  Router C  |─────+
                 +------------+
-
-
 ---
+
 🔁 Scenario: Misconfigured Static Routes or Routing Protocols
 
     Router B thinks the best route to 198.51.100.1 is via Router C.
@@ -119,6 +118,7 @@ We’ll use **static routes** for simplicity and simulate **redundant paths with
 | C      | `Gig0/3`  | `198.51.100.2/30` | Blackhole / Missing destination |
 
 ---
+ ```text
                 +------------+
                 |  Router A  |
                 | 10.0.0.1   |
@@ -149,6 +149,8 @@ We’ll use **static routes** for simplicity and simulate **redundant paths with
                       | Gi0/3
                       |
                (blackhole / missing 198.51.100.1)
+```
+     
 
 
 ---
