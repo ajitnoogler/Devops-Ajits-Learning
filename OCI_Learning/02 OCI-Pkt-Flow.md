@@ -4,21 +4,56 @@
 ### 📦 Summary of Packet Flow
 
 ```text
-[User] 
-  ↓ DNS Resolution
-[Public IP / LB IP]
+[User]
+  ↓ DNS Resolution (OCI DNS with Geolocation / Latency Steering)
+[Public IP → OCI Load Balancer in Closest Region]
   ↓
-[OCI Public Load Balancer] 
-  ↓ (optional)
-[Gateway Load Balancer] → [NGFW: Traffic Inspection]
+[Public Load Balancer Subnet (e.g., ap-mumbai-1 or us-ashburn-1)]
   ↓
-[Web Server in Private Subnet]
+(Optional)
+[Gateway Load Balancer → NGFW (e.g., Palo Alto VM-Series)]
   ↓
-[App → DB or other internal tiers]
+[Web/App Server in Private Subnet (App Tier)]
   ↓
-[Response Sent Back via Same Path (Stateful)]
+[Database Server in Private Subnet (DB Tier)]
+  ↓
+[Response sent back via same stateful flow]
 ```
 
+---
+# Multi Region View:
+
+```text
+                     🌍 User Traffic from Anywhere
+                              |
+             ┌─────────────────────────────────┐
+             │     OCI DNS (Steering Policy)   │
+             └─────────────────────────────────┘
+                    ↓                     ↓
+      ┌────────────────────┐   ┌────────────────────┐
+      │ Region: ap-mumbai-1│   │ Region: us-ashburn-1│
+      └────────────────────┘   └────────────────────┘
+             ↓                            ↓
+ ┌──────────────────────────┐ ┌──────────────────────────┐
+ │ Public Load Balancer     │ │ Public Load Balancer     │
+ │  (HTTPS, Port 443)       │ │  (HTTPS, Port 443)       │
+ └────────────┬─────────────┘ └────────────┬─────────────┘
+              ↓                            ↓
+   [Gateway LB → NGFW (Optional)]   [Gateway LB → NGFW (Optional)]
+              ↓                            ↓
+ ┌────────────▼─────────────┐ ┌────────────▼─────────────┐
+ │ Web/App Tier (Private)   │ │ Web/App Tier (Private)   │
+ └────────────┬─────────────┘ └────────────┬─────────────┘
+              ↓                            ↓
+      ┌───────▼────────┐          ┌────────▼────────┐
+      │ DB Tier (Private) │        │ DB Tier (Private) │
+      └──────────────────┘        └──────────────────┘
+
+⬅️ Response follows same path (Stateful LB + NGFW Tracking)
+```
+
+
+---
 ---
 
 ## 🔄 Step-by-Step Packet Flow in OCI (Web App Access from Internet)
