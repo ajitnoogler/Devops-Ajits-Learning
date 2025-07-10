@@ -59,6 +59,18 @@ person['city'] = 'Mumbai'
 ```
 
 ---
+| Symbol  | Name                | Common Use (Python & Programming)                               |
+| ------- | ------------------- | --------------------------------------------------------------- |
+| `(` `)` | **Parentheses**     | Function calls, grouping, tuples → `print("Hi")`, `x = (1, 2)`  |
+| `[` `]` | **Square brackets** | Lists, indexing, slices → `my_list[0]`, `a[1:3]`                |
+| `{` `}` | **Curly braces**    | Dictionaries, sets, f-strings → `{"key": "value"}`, `f"{name}"` |
+
+🧠 Memory Trick:
+
+    Parentheses → Perform (functions)
+    Square → Slice or Subscript (lists)
+    Curly → Collections (dicts/sets)
+---
 
 ### ❗ Common Interview Questions
 
