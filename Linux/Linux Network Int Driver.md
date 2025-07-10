@@ -10,8 +10,13 @@
 - **Impact:** On-prem connectivity affected (latency, retries)  
 - **Suspicion:** Fleet-wide issue tied to Cisco NIC driver  
 
-### Check Which Driver is in Use: 
+## 🖧 Linux NIC Troubleshooting Cheat Sheet
 
+---
+
+### ✅ Check Which Driver is in Use
+
+```bash
 $ ethtool -i ens33
 driver: e1000
 version: 6.8.0-51-generic
@@ -23,9 +28,13 @@ supports-test: yes
 supports-eeprom-access: yes
 supports-register-dump: yes
 supports-priv-flags: no
-leo@leo-Ansi:~$ 
+```
 
-### Check if Nics has Packet Drop:
+---
+
+### 📉 Check if NICs Have Packet Drop
+
+```bash
 $ ip -s link show
 2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
     link/ether 00:0c:29:89:20:c7 brd ff:ff:ff:ff:ff:ff
@@ -34,14 +43,30 @@ $ ip -s link show
     TX:  bytes packets errors dropped carrier collsns           
        3276773   49145      0       0       0       0 
     altname enp2s1
-    
+```
+
+---
+
+### 📊 Network Interface Stats (Drop/Error Summary)
+
+```bash
 $ netstat -i 
 Kernel Interface table
 Iface      MTU    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg
 ens33     1500   668213      0      0 0         48830      0      0      0 BMRU
 ens37     1500       81      0      0 0           107      0      0      0 BMRU
 lo       65536      413      0      0 0           413      0      0      0 LRU
+```
 
+---
+
+### 🧠 Notes
+
+- `ethtool -i <iface>` → Shows NIC driver and features.
+- `ip -s link show` → Displays NIC-level RX/TX stats including **packet drops**.
+- `netstat -i` → Summarized view of all interfaces with errors/drops.
+
+---
 
 ### Correlate with OS Kernel Logs
 
