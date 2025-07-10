@@ -118,6 +118,7 @@ iperf Done.
 ---
 
 #### 4. Check for Packet Loss, Latency, and Jitter
+```bash
 
 $ mtr -rwzbc100 8.8.8.8
 Start: 2025-07-10T22:20:01+0530
@@ -149,6 +150,14 @@ From 192.168.1.1 icmp_seq=4 Frag needed and DF set (mtu = 1400)
 --- 8.8.8.8 ping statistics ---
 4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3063ms
 
+| Part      | Meaning                                                                 |
+| --------- | ----------------------------------------------------------------------- |
+| `ping`    | Sends ICMP Echo Requests to test connectivity and packet delivery.      |
+| `-s 1400` | Set the **payload size** of the packet to 1400 bytes (without headers). |
+| `-M do`   | **"Do not fragment"** the packet (set DF bit in IP header).             |
+| `8.8.8.8` | The **destination IP address** (Google DNS in this case).               |
+
+```
 ---
 
 #### 5. Validate Interface & Duplex Settings
