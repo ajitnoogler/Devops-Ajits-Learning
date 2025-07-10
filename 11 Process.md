@@ -3,7 +3,7 @@
 
 Severity (or "Sev") defines the impact level of a technical issue on the customer's business or services. 
 
-It's crucial during triage because it determines how fast and how seriously the cloud provider responds.
+It's important during triage because it determines how fast and how seriously the cloud provider responds.
 
 ---
 #### ☁️ AWS Severity & SLA
