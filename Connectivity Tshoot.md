@@ -213,3 +213,23 @@ You should:
    - Backend instance is healthy
 
    -  SSL is properly configured
+
+---
+
+#### 🌐 Public vs Private Load Balancer in OCI:
+
+- The type of OCI Load Balancer (Public vs Private) significantly affects the access path, DNS resolution, routing, and security.
+
+| **Aspect**                | **Public Load Balancer**                                         | **Private Load Balancer**                                                      |
+| ------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **IP Address**            | Has a **Public IP**                                              | Has a **Private IP (VCN subnet)**                                              |
+| **Access Scope**          | Accessible over the **Internet**                                 | Accessible **only within VCN / via VPN / FastConnect / VCN Peering**           |
+| **DNS Name**              | FQDN resolves to public IP                                       | FQDN resolves to private IP                                                    |
+| **Routing Requirements**  | No special route needed for client to reach LB from Internet     | Requires on-prem to have route to LB subnet via **DRG/VPN/FastConnect**        |
+| **Security Requirements** | Security List / NSG must allow **Internet Ingress** to LB subnet | Security List / NSG must allow **on-prem subnet** or **peered VCNs** to access |
+| **Typical Use Case**      | Websites, apps, or APIs exposed to the public                    | Internal apps, APIs, microservices, or hybrid use cases                        |
+| **Health Checks**         | From LB to backend instances over private IPs                    | Same (but ensure backend subnets are reachable from LB subnet)                 |
+| **Client Path**           | `User → Internet → Public LB → Backend`                          | `User → VPN/FastConnect → Private LB → Backend`                                |
+| **Firewall/NAT Impacts**  | Ensure public LB IP not blocked by on-prem firewall              | Ensure NAT is not rewriting source IP unexpectedly                             |
+| **Logging Consideration** | Easier to correlate with public IP logs                          | May require inspection of private IP logs for on-prem clients                  |
+| **Failover Impact**       | Affected by Internet Gateway and public IP routing               | Affected by DRG/FastConnect/VPN tunnel stability                               |
