@@ -31,6 +31,35 @@
 
 
 ---
+🔁 Scenario: Misconfigured Static Routes or Routing Protocols
+
+    Router B thinks the best route to 198.51.100.1 is via Router C.
+
+    Router C thinks the best route to 198.51.100.1 is via Router B.
+
+    So when Router B receives the packet, it forwards it to C.
+
+    Router C receives it and sends it back to B.
+
+    The packet loops infinitely between them.
+---
+🔁 Why This Causes a Routing Loop
+
+    Both routers have two static routes each pointing back to the other for 198.51.100.0/24.
+
+    If the destination 198.51.100.1 is not available, packets loop:
+
+        B ➝ C via Link 1
+
+        C ➝ B via Link 2
+
+        and repeat...
+
+---
+✅ To Stop the Loop add Blackhole Route to Null0
+
+    Use ip route 198.51.100.0 255.255.255.0 null0 on Router C to blackhole.
+---
 
 ```text
 traceroute to 198.51.100.1, 30 hops max
