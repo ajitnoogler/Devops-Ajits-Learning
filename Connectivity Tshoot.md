@@ -199,3 +199,17 @@ b. On-Prem Gateway/Firewall:
 | **10. DNS Resolution**                   | If accessing via LB hostname, verify DNS resolves to LB's **IP address**.                          | `nslookup <hostname>`                     |
 | **11. Cross-VCN or DRG Flow**            | If LB and backend are in different VCNs or regions, verify DRG/Peering path.                       | VCN > DRG Attachments & Routes            |
 
+#### 📌 Example Scenario:
+
+A user on-prem accesses https://app.company.com (OCI Public LB DNS). The LB forwards to a backend instance on port 8080.
+You should:
+
+   - Ensure LB listener is on port 443
+
+   - Backend set uses port 8080
+
+   - NSGs allow LB to backend traffic
+
+   - Backend instance is healthy
+
+   -  SSL is properly configured
