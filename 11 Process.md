@@ -2,6 +2,7 @@
 #### ✅ 1. What is Severity?
 
 Severity (or "Sev") defines the impact level of a technical issue on the customer's business or services. 
+
 It's crucial during triage because it determines how fast and how seriously the cloud provider responds.
 
 ---
