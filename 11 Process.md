@@ -6,6 +6,17 @@ Severity (or "Sev") defines the impact level of a technical issue on the custome
 It's important during triage because it determines how fast and how seriously the cloud provider responds.
 
 ---
+#### 📘 What is SLA?
+
+SLA stands for Service Level Agreement.
+It is a formal commitment between a service provider (like AWS, Oracle, etc.) and the customer that defines:
+
+| **SLA Type**         | **Example**                                                          |
+| -------------------- | -------------------------------------------------------------------- |
+| **Availability SLA** | AWS S3: 99.9% uptime monthly — if breached, credits apply            |
+| **Support SLA**      | OCI Sev 1: Initial response in < 1 hour (for paid support customers) |
+
+---
 #### ☁️ AWS Severity & SLA
 
 | **Severity** | **Name**            | **Description**                                         | **Initial Response Time (SLA)**   |
