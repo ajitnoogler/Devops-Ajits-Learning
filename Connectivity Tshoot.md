@@ -18,6 +18,11 @@ Collect Initial Info:
 | Instance OS       | Linux/Windows, firewall status                   |
 
 ---
+
+<img width="456" height="391" alt="image" src="https://github.com/user-attachments/assets/48f16383-0b43-4c2f-89ca-bb1b3f71ff68" />
+
+
+---
 #### 2. Confirm Basic Reachability (OSI Layer 3):
 
 From On-Prem: ping <OCI_IP> && traceroute <OCI_IP>
