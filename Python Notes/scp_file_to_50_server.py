@@ -14,7 +14,7 @@ for server in servers:
     print(f'Transferring to {server}...')
     try:
         ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())     # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())  This line tells Paramiko what to do when the SSH server's host key is not known (i.e., it's not in your known_hosts file).
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())     # <--- This line tells Paramiko what to do when the SSH server's host key is not known (i.e., it's not in your known_hosts file).
         ssh.connect(server, username=username, key_filename=ssh_key_path)
         with SCPClient(ssh.get_transport()) as scp:
             scp.put(local_file, remote_path)
