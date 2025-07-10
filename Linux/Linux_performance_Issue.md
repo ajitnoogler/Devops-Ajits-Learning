@@ -136,12 +136,31 @@ uptime
 #### ✅ `/proc/loadavg`
 
 ```bash
-cat /proc/loadavg
+$ cat /proc/loadavg
+0.24 0.39 0.39 1/493 7513
+
+0.24  0.39  0.39   1/493   7513
+│     │     │      │       │
+│     │     │      │       └─> 5.  **Last Process ID**
+│     │     │      └────────> 4.  **Processes running / total processes**
+│     │     └──────────────> 3.  **15-minute load average**
+│     └────────────────────> 2.  **5-minute load average**
+└─────────────────────────> 1.  **1-minute load average**
+
+
+💡 Interpretation:
+A value of 1.00 means 1 process is using or waiting for CPU.
+If you have 4 CPU cores, load of:
+4.00 → Fully utilized
+<4.00 → Underutilized
+>4.00 → Overloaded
+
+
 ```
 
 ---
 
-### 📝 6. **Logs and Kernel Messages**
+#### 📝 6. **Logs and Kernel Messages**
 
 #### ✅ `dmesg`
 
@@ -159,7 +178,7 @@ journalctl -xe | tail
 
 ---
 
-### 🔍 7. **Process Tree & Zombie Check**
+#### 🔍 7. **Process Tree & Zombie Check**
 
 #### ✅ Show full process hierarchy
 
@@ -175,7 +194,7 @@ ps -eo stat,cmd | grep '^Z'
 
 ---
 
-## 📌 Summary Table
+#### 📌 Summary Table
 
 | Area      | Command                                      | What It Shows                    |
 | --------- | -------------------------------------------- | -------------------------------- |
@@ -189,7 +208,7 @@ ps -eo stat,cmd | grep '^Z'
 
 ---
 
-## ✅ Example Output Interpretation
+#### ✅ Example Output Interpretation
 
 ```bash
 cat /proc/meminfo | egrep 'MemTotal|MemFree|Buffers|Cached'
