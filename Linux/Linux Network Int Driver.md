@@ -69,9 +69,37 @@ lo       65536      413      0      0 0           413      0      0      0 LRU
 ---
 
 ### Correlate with OS Kernel Logs
+```bash
 
 $ sudo dmesg | grep -i 'fail\|drop\|timeout\|nic\|cisco\|tx\|rx'
+
+[   24.012345] enic 0000:3b:00.0 ens3: firmware version 3.2.115.0
+[   25.126789] enic 0000:3b:00.0 ens3: TX timeout - resetting interface
+[   25.127001] enic 0000:3b:00.0 ens3: TX ring stalled, resetting NIC
+[   25.129334] enic 0000:3b:00.0 ens3: Reset complete
+[   26.421553] enic 0000:3b:00.0 ens3: Link down
+[   26.522201] enic 0000:3b:00.0 ens3: Link up
+[   50.553229] enic 0000:3b:00.0 ens3: RX descriptor error: dropped packet
+[   50.553811] enic 0000:3b:00.0 ens3: Hardware RX buffer allocation failed
+[  120.789001] enic 0000:3b:00.0 ens3: Multiple TX failures detected
+[  121.001256] enic 0000:3b:00.0 ens3: Firmware did not respond in time
+[  121.004721] enic 0000:3b:00.0 ens3: PCIe correctable error detected
+```
+
+```bash
 $ journalctl -k | grep -i <cisco_nic>
+
+Jul 10 11:24:05 oci-bm kernel: enic 0000:3b:00.0 ens3: TX timeout - resetting interface
+Jul 10 11:24:05 oci-bm kernel: enic 0000:3b:00.0 ens3: TX ring stalled, resetting NIC
+Jul 10 11:24:05 oci-bm kernel: enic 0000:3b:00.0 ens3: Reset complete
+Jul 10 11:25:45 oci-bm kernel: enic 0000:3b:00.0 ens3: Link down
+Jul 10 11:25:46 oci-bm kernel: enic 0000:3b:00.0 ens3: Link up
+Jul 10 11:28:12 oci-bm kernel: enic 0000:3b:00.0 ens3: RX descriptor error: dropped packet
+Jul 10 11:28:12 oci-bm kernel: enic 0000:3b:00.0 ens3: Hardware RX buffer allocation failed
+Jul 10 11:30:00 oci-bm kernel: enic 0000:3b:00.0 ens3: Firmware did not respond in time
+Jul 10 11:30:01 oci-bm kernel: enic 0000:3b:00.0 ens3: PCIe correctable error detected
+
+```
 
 Look for:
 
