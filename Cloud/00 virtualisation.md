@@ -1,8 +1,8 @@
-# ☁️ Benefits of Cloud Computing & Virtualization | Cloud vs On-Premise Comparison
+### ☁️ Benefits of Cloud Computing & Virtualization | Cloud vs On-Premise Comparison
 
 ---
 
-## ✅ Benefits of Cloud Computing
+### ✅ Benefits of Cloud Computing
 
 - **Scalability** – Instantly scale resources up or down as needed.
 - **Pay-as-you-go** – Only pay for what you use; no upfront hardware cost.
@@ -16,7 +16,7 @@
 
 ---
 
-## ✅ Benefits of Virtualization
+### ✅ Benefits of Virtualization
 
 - **Hardware Consolidation** – Run multiple VMs on a single physical server.
 - **Improved Resource Utilization** – Allocate CPU, memory, and storage efficiently.
@@ -28,7 +28,7 @@
 
 ---
 
-## 🔁 Cloud vs On-Premise Comparison
+### 🔁 Cloud vs On-Premise Comparison
 
 | Feature                  | Cloud                                 | On-Premise                            |
 |--------------------------|----------------------------------------|----------------------------------------|
@@ -45,7 +45,7 @@
 | **Energy Costs**         | None (included in service)             | Paid and managed internally            |
 
 ---
-## 📌 Decision Matrix
+### 📌 Decision Matrix
 
 | Criteria            | Prefer Cloud      | Prefer On-Prem    |
 |---------------------|-------------------|-------------------|
@@ -59,7 +59,7 @@
 
 ---
 
-## 🏢 Real-World Enterprise Scenarios
+### 🏢 Real-World Enterprise Scenarios
 
 ---
 
