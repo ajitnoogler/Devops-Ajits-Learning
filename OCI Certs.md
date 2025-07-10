@@ -75,7 +75,6 @@ OCI Architect Professional (1Z0-997)
 OCI Security Professional (1Z0-1104)
      ➕ Developer Associate (Optional)
 
-
 ⸻
 
 ✅ Top 3 Recommendations for 2025 Hiring Focus:
