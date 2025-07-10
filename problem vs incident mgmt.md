@@ -136,7 +136,7 @@ Problem Management = Fire prevention
 | Package manager fails (yum/apt)          | Clear cache or switch mirror                | Check repo config, GPG key                              | `yum clean all`, `apt update`, check `/etc/yum.repos.d/`     |
 | Slow boot time                           | Disable unnecessary services                | Profile boot, systemd units                             | `systemd-analyze blame`, `systemctl disable <svc>`           |
 | User cannot sudo                         | Add to sudo group                           | Fix sudoers file or plugin error                        | `usermod -aG wheel user`, `visudo`, `groups user`            |
-| High zombie process count                | Reboot or kill parent                       | Fix parent signal handler                               | `ps aux | grep Z`, `pstree -p`, `strace -p <PID>`             |
+| High zombie process count                | Reboot or kill parent                       | Fix parent signal handler                               | `ps aux | grep Z`, `pstree -p`, `strace -p <PID>` `kill -9 <parent_pid>`|
 | NIC goes down or disappears              | Reload NIC driver                           | Check udev rules, kernel modules                        | `ip link set <nic> up`, `modprobe -r <driver>; modprobe <driver>` |
 | Log rotation not happening               | Force logrotate manually                    | Fix config path, cron triggers                          | `logrotate -f /etc/logrotate.conf`, `cat /etc/cron*`         |
 
