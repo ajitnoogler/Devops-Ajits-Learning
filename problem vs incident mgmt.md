@@ -145,17 +145,17 @@ Problem Management = Fire prevention
 
 | **Scenario**                                              | **Incident Management (Quick Fix)**              | **Problem Management (Root Cause Analysis)**                                                |
 | --------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| **BGP session down between edge routers**                 | Clear BGP neighbor, restore route advertisements | Analyze flapping, MTU mismatch, timer mismatches, or ACLs blocking TCP 179                  |
-| **Interface on switch/router flapping**                   | Shut/no shut the interface or migrate to backup  | Investigate cable faults, faulty transceivers, or duplex mismatches                         |
-| **High CRC errors on access port**                        | Change patch cable or switch port                | Determine if there's electromagnetic interference, aging cables, or faulty NIC              |
-| **STP loop detected in access layer**                     | Disable suspected interface, restore network     | Investigate unauthorized switches, BPDU filter misconfig, or STP misalignment               |
+| **BGP session down between edge routers**                 | Clear BGP neighbor, restore route advertisements | Config-Issue, Analyze flapping, MTU mismatch, timer mismatches, or ACLs blocking TCP 179    |
+| **Interface on switch/router flapping**                   | Shut/no shut the interface or migrate to backup  | Investigate cable faults, faulty transceivers sfp, or duplex mismatches                     |
+| **High CRC errors on access port**                        | Change patch cable or switch port                | Faulty cables, or faulty NIC, check for interface IN/Out Errors, CRC, Drops                 |
+| **STP loop detected in access layer**                     | Disable suspected interface, restore network     | Investigate unauthorized switches connected, BPDU filter misconfig, or STP misalignment     |
 | **HSRP/VRRP failover triggered**                          | Re-enable primary router or move VIP manually    | Investigate interface tracking, high CPU, or preempt misconfig                              |
 | **User can't access internal network resource**           | Reassign IP, flush DNS or restart DHCP client    | Investigate duplicate IP, DHCP scope exhaustion, or VLAN misassignment                      |
 | **WAN link experiencing high latency**                    | Reroute traffic via backup MPLS/VPN circuit      | Analyze QoS policy, carrier issues, or congestion at the CPE device                         |
 | **IP phone registering intermittently**                   | Restart phone or reset PoE port                  | Investigate VLAN mismatch, DHCP option 150 TFTP config download issue, or switch firmware bug|
 | **Firewall denying outbound internet traffic**            | Temporarily allow IP/port in ACL or NAT          | Investigate policy group misassignment, NAT overload issue, or IPS signature false positive |
-| **Access switch not reachable from core**                 | Use OOB or physically restart                    | Investigate Spanning Tree blockage, trunk misconfig, or dead supervisor module              |
-| **SNMP monitoring alerts for high interface utilization** | Apply QoS or increase bandwidth                  | Investigate excessive broadcast/multicast traffic, or L2 loop                               |
+| **Access switch not reachable from core**                 | Use OOB or physically restart                    | Investigate STP blockage, trunk misconfig, uplink of downlink port failure.                 |
+| **SNMP monitoring alerts for high interface utilization** | Apply QoS or increase bandwidth                  | Investigate excessive broadcast/multicast traffic, or L2 loop, wrong cabling                |
 | **NTP sync broken on routers/firewalls**                  | Set time manually, reconfigure peer              | Investigate firewall port blocks (UDP 123), wrong NTP server, or drift threshold            |
-| **Dynamic routing not propagating prefixes**              | Clear OSPF/BGP sessions                          | Analyze route filtering, summarization, or RIB-to-FIB failure                               |
+| **Dynamic routing not propagating prefixes**              | Clear OSPF/BGP sessions                          | Analyze route filtering, Firewall filtering multicast IP of ospf, TCP 179 blocked           |
 
