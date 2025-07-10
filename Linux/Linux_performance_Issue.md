@@ -19,6 +19,7 @@ You’ll need to rely on built-in tools and /proc files, which are always availa
 
 ```bash
 cat /proc/meminfo | egrep 'MemTotal|MemFree|Buffers|Cached|SwapTotal|SwapFree'
+cat /proc/meminfo | egrep 'MemTotal|MemFree|Buffers|Cached|SwapTotal|SwapFree' | awk '{printf "%s %10.2f MB\n", $1, $2/1024}'
 ```
 
 Look for:
@@ -26,12 +27,12 @@ Look for:
 * `MemFree` very low (but check `Buffers` and `Cached` too — they're reclaimable)
 * `SwapFree` very low = swap pressure = memory issue
 
-#### ✅ `/proc/<pid>/status`
+#### ✅ ps 
 
 Check memory usage for a specific process:
 
 ```bash
-cat /proc/$(pgrep -n your_process_name)/status | grep -i vm
+ps -eo pid,comm,%mem --sort=-%mem | grep your_process_name | head -1
 ```
 
 ---
