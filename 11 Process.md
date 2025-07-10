@@ -9,6 +9,7 @@ It's important during triage because it determines how fast and how seriously th
 #### 📘 What is SLA?
 
 SLA stands for Service Level Agreement.
+
 It is a formal commitment between a service provider (like AWS, Oracle, etc.) and the customer that defines:
 
 | **SLA Type**         | **Example**                                                          |
