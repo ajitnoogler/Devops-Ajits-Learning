@@ -25,6 +25,6 @@ print(fruits)  # ['apple', 'banana', 'mango']
 
 # Tuple
 colors = ("red", "green", "blue")
-### colors.append("yellow")  # ❌ Error: 'tuple' object has no attribute 'append'
+#### colors.append("yellow")  # ❌ Error: 'tuple' object has no attribute 'append'
 
 
