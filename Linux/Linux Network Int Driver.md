@@ -18,14 +18,14 @@
 
 ```bash
 $ ethtool -i ens33
-driver: e1000
-version: 6.8.0-51-generic
-firmware-version: 
-expansion-rom-version: 
-bus-info: 0000:02:01.0
+driver: enic
+version: 2.5.1
+firmware-version: 4.2.3.57
+expansion-rom-version:
+bus-info: 0000:05:00.0
 supports-statistics: yes
 supports-test: yes
-supports-eeprom-access: yes
+supports-eeprom-access: no
 supports-register-dump: yes
 supports-priv-flags: no
 ```
