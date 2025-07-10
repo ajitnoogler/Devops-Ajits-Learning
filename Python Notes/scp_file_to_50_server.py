@@ -20,7 +20,7 @@ for server in servers:
             scp.put(local_file, remote_path)
         ssh.close()
         print(f'Successfully transferred to {server}')
-    except (paramiko.SSHException, FileNotFoundError, OSError) as e:
+    except (paramiko.SSHException, FileNotFoundError, OSError) as e:     # <--- This catches specific exceptions that might occur during the SSH or file transfer process:
         print(f'Failed to transfer to {server}: {e}')
 
 
