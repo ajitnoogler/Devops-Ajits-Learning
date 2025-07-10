@@ -83,3 +83,7 @@ OCI Security Professional (1Z0-1104)
 	3.	OCI Security Professional (1Z0-1104)
 
 ⸻
+https://mylearn.oracle.com/ou/learning-path/oracle-linux-8-system-administration/84612
+
+---
+
