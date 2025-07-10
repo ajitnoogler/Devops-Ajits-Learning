@@ -3,7 +3,7 @@
 Use this checklist to debug and resolve common SSL/TLS issues in cloud, on-prem, and web server environments.
 
 ---
-## 🔐 SSL Troubleshooting Checklist (Summary Table)
+#### 🔐 SSL Troubleshooting Checklist (Summary Table)
 
 | ✅ Checkpoint Category         | 🔍 What to Verify                                              | 🛠️ Suggested Command / Fix                                    |
 |-------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|
@@ -19,8 +19,8 @@ Use this checklist to debug and resolve common SSL/TLS issues in cloud, on-prem,
 | **10. Client Errors**         | Are browsers or curl showing specific SSL handshake errors?   | Review client logs and run `curl -v https://yourdomain.com`   |
 ```
 ---
-
-🌐 HTTP Status Codes – Categorized with Meanings
+```
+#### 🌐 HTTP Status Codes – Categorized with Meanings
 
 | Code  | Meaning                      | Description / When Encountered                              |
 | ----- | ---------------------------- | ----------------------------------------------------------- |
@@ -41,6 +41,7 @@ Use this checklist to debug and resolve common SSL/TLS issues in cloud, on-prem,
 | `521` | Web Server Down (Cloudflare) | Load balancer can't reach the web server                    |
 | `522` | Connection Timed Out (CF)    | TCP handshake timeout between edge and origin               |
 
+```
 ---
 
 ✅ Paste this in your GitHub `.md` file as-is.  
