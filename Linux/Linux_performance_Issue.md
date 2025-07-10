@@ -89,8 +89,33 @@ cat /proc/net/dev
 #### ✅ `ss` (Socket Statistics, built-in)
 
 ```bash
-ss -s
-ss -tuna
+$ ss -s
+Total: 331
+TCP:   22 (estab 10, closed 1, orphaned 0, timewait 1)
+
+Transport Total     IP        IPv6
+RAW       1         0         1        
+UDP       2         2         0        
+TCP       21        12        9        
+INET      24        14        10       
+FRAG      0         0         0
+
+$ ss -tuna
+Netid                State                    Recv-Q                 Send-Q                                      Local Address:Port                                            Peer Address:Port                 Process                
+udp                  UNCONN                   0                      0                                           127.0.0.53%lo:53                                                   0.0.0.0:*                                           
+udp                  UNCONN                   0                      0                                          10.0.3.67%eth0:68                                                   0.0.0.0:*                                           
+tcp                  LISTEN                   0                      511                                             127.0.0.1:46737                                                0.0.0.0:*                                           
+tcp                  LISTEN                   0                      4096                                            127.0.0.1:45221                                                0.0.0.0:*                                           
+tcp                  LISTEN                   0                      4096                                        127.0.0.53%lo:53                                                   0.0.0.0:*                                           
+tcp                  LISTEN                   0                      512                                             127.0.0.1:16635                                                0.0.0.0:*                                           
+tcp                  LISTEN                   0                      512                                             127.0.0.1:16634                                                0.0.0.0:*                                           
+tcp                  LISTEN                   0                      128                                               0.0.0.0:2000                                                 0.0.0.0:*                                           
+tcp                  LISTEN                   0                      128                                               0.0.0.0:2222                                                 0.0.0.0:*                                           
+tcp                  ESTAB                    0                      0                                               10.0.3.67:59464                                           91.189.91.43:443                                         
+tcp                  TIME-WAIT                0                      0                                               10.0.3.67:46550                                           20.50.80.214:443                                         
+tcp                  ESTAB                    0                      0                                               10.0.3.67:41632                                           20.209.56.33:443                                         
+tcp                  ESTAB                    0                      0                                               127.0.0.1:46737                                              127.0.0.1:43526                                       
+tcp                  ESTAB                    0                      0                                               127.0.0.1:46737                                              127.0.0.1:43514   
 ```
 
 * Active TCP/UDP sockets, listening ports.
