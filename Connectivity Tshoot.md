@@ -181,3 +181,21 @@ b. On-Prem Gateway/Firewall:
 | 14       | Logs Review                   | Review logs on firewall, OCI instance, and services for drops or errors                            |
 | 15       | Retest and Validate           | Apply fixes (routing, firewall, VPN) and retest connectivity                                       |
 
+---
+
+#### 🧰 Additional Checks When OCI Load Balancer is Involved
+
+| **Check**                                | **Description**                                                                                    | **Commands / Console Path**               |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| **1. Load Balancer Type**                | Determine if it's **Public** or **Private** LB. Affects access path.                               | OCI Console > Networking > Load Balancer  |
+| **2. Listener Configuration**            | Ensure correct **port**, **protocol**, and **hostname** in listener settings.                      | OCI Console > Load Balancer > Listener    |
+| **3. Backend Set Health**                | Check if backends (OCI instances) show as **`Healthy`**. Unhealthy backends don’t receive traffic. | OCI Console > Load Balancer > Backend Set |
+| **4. Backend Port Reachability**         | Verify the **backend port** (e.g., 80, 443, 8080) is open and service is running on instance.      | `curl localhost:<port>` on instance       |
+| **5. Security List / NSG for LB Subnet** | Allow traffic **from on-prem** to the **LB subnet**, and **from LB to backends**.                  | Security List or NSG rules                |
+| **6. LB Subnet Routing**                 | Ensure LB subnet has route to backend subnet and vice versa.                                       | VCN Route Tables                          |
+| **7. Load Balancer Logging**             | Enable and check **Access Logs** or **Error Logs** to debug traffic issues.                        | OCI Console > Load Balancer > Logging     |
+| **8. SSL/TLS Termination**               | If SSL termination is enabled on LB, ensure correct certs and backend protocol.                    | Listener > SSL Certs                      |
+| **9. Sticky Sessions (if enabled)**      | Ensure LB cookie or source-IP persistence is not misrouting traffic.                               | Backend Set > Session Persistence         |
+| **10. DNS Resolution**                   | If accessing via LB hostname, verify DNS resolves to LB's **IP address**.                          | `nslookup <hostname>`                     |
+| **11. Cross-VCN or DRG Flow**            | If LB and backend are in different VCNs or regions, verify DRG/Peering path.                       | VCN > DRG Attachments & Routes            |
+
