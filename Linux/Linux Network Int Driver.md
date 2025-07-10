@@ -165,9 +165,9 @@ $ ping <on-prem-IP> -i 0.2 -s 1400 -D
 ### TAC Support Tip
 When filing Cisco TAC case:
 
-Mention "ENIC driver"
+Mention "ENIC driver" // ethtool -i ens33
 
-Attach logs (or output)
+Attach logs (or output) // dmesg and journalctl logs
 
 Include test results across multiple instances
 
