@@ -1,3 +1,29 @@
+
+### 🏗️ Block Storage Services Comparison
+
+| Cloud Platform                        | Service Name                  | Description                                                           |
+| ------------------------------------- | ----------------------------- | --------------------------------------------------------------------- |
+| **AWS**                               | **EBS (Elastic Block Store)** | Provides block-level storage volumes for use with EC2 instances.      |
+| **OCI (Oracle Cloud Infrastructure)** | **Block Volumes**             | Offers high-performance, durable block storage for compute instances. |
+
+---
+
+### 📦 EBS (AWS) – Key Points
+
+* Attachable to EC2 instances as a virtual disk.
+* Supports snapshots and encryption.
+* Types: gp3, io2, sc1, etc.
+* Scales independently of EC2.
+
+### 🧱 Block Volumes (OCI) – Key Points
+
+* Equivalent to EBS in Oracle Cloud.
+* Attachable to Compute Instances.
+* Support for backup, cloning, encryption, auto-tuning.
+* Performance levels: **Balanced**, **Higher Performance**, **Ultra High Performance**.
+
+---
+
 💽 Amazon EBS Volume Types Explained - Elastic Block Storage
 
 | **Volume Type** | **Full Name**            | **Purpose / Optimized For**                                 |
