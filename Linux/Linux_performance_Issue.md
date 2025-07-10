@@ -216,6 +216,14 @@ MemTotal:       16391424 kB
 MemFree:         1234567 kB
 Buffers:          234567 kB
 Cached:          4567890 kB
+
+$ cat /proc/meminfo | egrep 'MemTotal|MemFree|Buffers|Cached' | awk '{ mb = $2 / 1024; gb = mb / 1024; printf "%-10s %10.2f MB  |  %8.2f GB\n", $1, mb, gb }'
+MemTotal:    15990.00 MB  |     15.62 GB
+MemFree:       258.29 MB  |      0.25 GB
+Buffers:       222.32 MB  |      0.22 GB
+Cached:      12349.95 MB  |     12.06 GB
+SwapCached:       0.00 MB  |      0.00 GB
+
 ```
 
 👉 High `Cached` + `Buffers` is good — not a memory leak.
