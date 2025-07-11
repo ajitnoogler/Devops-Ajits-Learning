@@ -11,6 +11,30 @@
 
 ---
 
+#### 🧭 Sequence of Resource Activation
+
+# 🌐 HTTP Request: Linux Resource Activation Sequence
+
+When a user accesses a web app via HTTP, the Linux system activates resources in the following order:
+
+| ⏱️ Order | 💡 Resource     | 🔁 Why It’s Triggered                                                 | 🧠 Example                                             |
+|----------|------------------|------------------------------------------------------------------------|--------------------------------------------------------|
+| 1st      | 🌐 Network        | Request arrives via NIC → triggers a hardware interrupt                | Packet from browser hits server on port 80/443         |
+| 2nd      | 🖥️ CPU           | CPU handles interrupt → runs softirq → TCP/IP stack → socket           | Kernel processes packet, passes to Nginx/Apache        |
+| 3rd      | 💾 Memory         | Buffers request, allocates memory for HTTP parsing and session data    | Store headers, cookies, app variables in RAM           |
+| 4th      | 💽 Disk I/O (optional) | Access disk if static files, DB queries, or logs are involved        | Read HTML files, write logs, or fetch DB records       |
+| 5th      | 💾 Memory         | Allocates memory to build the HTTP response                            | Store JSON/HTML response before sending                |
+| 6th      | 🌐 Network        | Response is sent out via NIC (TX queue)                                | Web server writes to socket → packets go to user       |
+| 7th      | 🖥️ CPU           | Post-processing and preparing for next request                         | Frees memory, handles next connection                  |
+
+---
+
+## ✅ Summary Flow:
+
+**🌐 Network** → **🖥️ CPU** → **💾 Memory** → **💽 Disk I/O (if needed)** → **💾 Memory (response)** → **🌐 Network (send)** → **🖥️ CPU (wrap up)**
+
+---
+
 #### ⚡ What is an Interrupt (in Linux or any OS)?
 
 An interrupt is a signal sent to the CPU by hardware or software indicating that something needs immediate attention.
