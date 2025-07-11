@@ -6,7 +6,7 @@ A memory leak occurs when an application keeps allocating memory but fails to re
 causing RAM usage to grow over time — eventually leading to slowdowns, swapping, or OOM (Out-Of-Memory) kills.
 
 OOM (Out-Of-Memory) Kill is a Linux kernel mechanism that activates when the system runs out of available RAM and can't free up enough memory.  
-To prevent a total system crash, the kernel forcibly terminates one or more processes** — usually the one consuming the most memory.
+To prevent a total system crash, the kernel forcibly terminates one or more processes — usually the one consuming the most memory.
 ---
 
 ## 🔍 Symptoms of a Memory Leak
