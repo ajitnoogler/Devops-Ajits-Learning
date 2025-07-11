@@ -1,14 +1,12 @@
 
-````markdown
-# 🧬 How to Identify an Application Memory Leak in Linux
+#### 🧬 How to Identify an Application Memory Leak in Linux
 
 A memory leak occurs when an application keeps allocating memory but fails to release it,
 causing RAM usage to grow over time — eventually leading to slowdowns, swapping, or OOM (Out-Of-Memory) kills.
 
-OOM (Out-Of-Memory) Kill is a Linux kernel mechanism that activates when the system runs out of available RAM and can't free up enough memory.  
-To prevent a total system crash, the kernel forcibly terminates one or more processes — usually the one consuming the most memory.
+#### OOM (Out-Of-Memory) Kill is a Linux kernel mechanism that activates when the system runs out of available RAM and can't free up enough memory.  
+#### To prevent a total system crash, the kernel forcibly terminates one or more processes — usually the one consuming the most memory.
 ---
-
 ## 🔍 Symptoms of a Memory Leak
 
 | ⚠️ Symptom                     | 💡 Description                                                   |
@@ -19,6 +17,7 @@ To prevent a total system crash, the kernel forcibly terminates one or more proc
 | 💾 High swap usage            | System starts swapping due to memory pressure                      |
 | 🕒 Restart fixes it temporarily| Memory resets after process restarts (but issue comes back later) |
 
+---
 
 #### 🧬 Summary: How to Identify an Application Memory Leak in Linux
 
@@ -32,7 +31,7 @@ To prevent a total system crash, the kernel forcibly terminates one or more proc
 
 > ✅ A memory leak is confirmed when memory usage grows continuously and is not reclaimed even under idle conditions.
 
-
+---
 #### 🛠️ Steps to Detect a Memory Leak
 
 #### 🔁 1. **Monitor Memory Over Time**
@@ -94,7 +93,7 @@ journalctl -k | grep -i oom
 
 ---
 
-#### 🔍 5. **Use Tools for Deeper Leak Detection**
+#### 🔍 **Use Tools for Deeper Leak Detection for Developer**
 
 | Tool                               | Language | Purpose                          |
 | ---------------------------------- | -------- | -------------------------------- |
