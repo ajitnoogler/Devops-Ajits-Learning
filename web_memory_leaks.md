@@ -22,13 +22,13 @@ To prevent a total system crash, the kernel forcibly terminates one or more proc
 
 #### 🧬 Summary: How to Identify an Application Memory Leak in Linux
 
-| 🔢 Step | 🔍 What to Check                        | 🛠️ Tool/Command Example                                        | 📌 Key Indicator                                     |
-|--------|----------------------------------------|----------------------------------------------------------------|----------------------------------------------------------|
-| 1️⃣     | Monitor memory usage over time         | `watch "ps -eo pid,comm,%mem --sort=-%mem | head"`            | `%MEM` keeps increasing for the same process             |
-| 2️⃣     | Check actual resident memory (RSS)     | `smem -r -k | sort -k 4 -nr | head`                         | RSS keeps growing even when app is idle                    |
-| 3️⃣     | Verify swap activity                   | `free -m` or `vmstat 1 5`                                      | High swap usage despite low available RAM               |
-| 4️⃣     | Check for OOM (Out Of Memory) kills     | `dmesg | grep -i 'killed process'` or `journalctl -k | grep -i oom` | OOM killer logs show app being terminated         |
-| 5️⃣     | Use language-specific leak tools       | `valgrind`, `tracemalloc`, `objgraph`, `jmap`, `jvisualvm`    | Reports of unreleased memory or growing object counts    |
+| 🔢 Step | 🔍 What to Check                      | 🛠️ Tool/Command Example                                              | 📌 Key Indicator                                         
+|--------|-----------------------------------------|-----------------------------------------------------------------------|----------------------------------------------------------|
+| 1️⃣     | Monitor memory usage over time         | `watch "ps -eo pid,comm,%mem --sort=-%mem | head"`                    | `%MEM` keeps increasing for the same process             |
+| 2️⃣     | Check actual resident memory (RSS)     | `smem -r -k | sort -k 4 -nr | head`                                   | RSS keeps growing even when app is idle                  |
+| 3️⃣     | Verify swap activity                   | `free -m` or `vmstat 1 5`                                             | High swap usage despite low available RAM                |
+| 4️⃣     | Check for OOM (Out Of Memory) kills    | `dmesg | grep -i 'killed process'` or `journalctl -k | grep -i oom`  | OOM killer logs show app being terminated                |
+| 5️⃣     | Use language-specific leak tools       | `valgrind`, `tracemalloc`, `objgraph`, `jmap`, `jvisualvm`            | Reports of unreleased memory or growing object counts    |
 
 > ✅ A memory leak is confirmed when memory usage grows continuously and is not reclaimed even under idle conditions.
 
