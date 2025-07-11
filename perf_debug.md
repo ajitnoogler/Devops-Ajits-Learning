@@ -30,7 +30,22 @@ USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT
 load average: 0.75, 1.20, 0.90
                 ↑     ↑     ↑
             1 min  5 min  15 min
+
+$ uptime
+ 16:45:03 up 3 days,  5:01,  2 users,  load average: 20.15, 19.87, 18.45  <=== // High load average example
+
+✅ Interpreted as:
+
+    20.15 processes waiting/running in the last 1 minute
+
+    19.87 in the last 5 minutes
+
+    18.45 in the last 15 minutes
+
+👉 If the system only has 4 CPU cores, this is 5× overload!
 ```
+
+
 ==================================================
 
 If your system has 4 cores:
