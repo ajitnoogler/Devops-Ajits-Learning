@@ -20,19 +20,27 @@ Load Average is a metric that shows how busy your system's CPU(s) are. It reflec
 
    - Waiting for CPU time
 ``` bash
+
 $ w
- 11:10:33 up 41 min,  0 user,  load average:  0.75, 1.20, 0.90
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT
+ 16:45:03 up 3 days,  5:01,  2 users,  load average: 0.75, 1.20, 0.90
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+ajit     pts/0    192.168.0.10     10:12    1.00s  0.10s  0.10s top
+root     pts/1    192.168.0.20     09:45   10.00s  0.01s  0.01s bash
 
 ---
-
 
 load average: 0.75, 1.20, 0.90
                 ↑     ↑     ↑
             1 min  5 min  15 min
 
+===============================================================================
+
 $ uptime
  16:45:03 up 3 days,  5:01,  2 users,  load average: 20.15, 19.87, 18.45  <=== // High load average example
+
+load average: 20.15, 19.87, 18.45 <=== // High load average example
+                ↑     ↑     ↑
+            1 min  5 min  15 min
 
 ✅ Interpreted as:
 
@@ -43,6 +51,8 @@ $ uptime
     18.45 in the last 15 minutes
 
 👉 If the system only has 4 CPU cores, this is 5× overload!
+
+
 ```
 
 
