@@ -12,6 +12,45 @@
 | 🔍 Network Debugging (Adv.)| `dstat --net --top-io-adv`      | Shows network stats and most expensive I/O process. Requires separate installation.                                       |
 | 🔍 I/O Debugging (Advanced)| `sudo iotop`                    | Shows I/O usage per process. Not preinstalled; requires root and separate installation.                                   |
 
+---
+
+Load Average is a metric that shows how busy your system's CPU(s) are. It reflects the average number of processes that are either:
+
+   - Running
+
+   - Waiting for CPU time
+``` bash
+$ w
+ 11:10:33 up 41 min,  0 user,  load average:  0.75, 1.20, 0.90
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT
+
+---
+
+
+load average: 0.75, 1.20, 0.90
+                ↑     ↑     ↑
+            1 min  5 min  15 min
+```
+==================================================
+
+If your system has 4 cores:
+
+    A load average of 4.00 means fully utilized
+    A load average of 2.00 means 50% usage
+    A load average of 6.00 means overloaded (some processes are waiting)
+
+=========================================================================
+
+🚦 Quick judgment guide:
+
+| Load Avg (1m) | CPU Cores                                | Interpretation |
+| ------------- | ---------------------------------------- | -------------- |
+| ≤ CPU cores   | Balanced/Healthy load                    |                |
+| > CPU cores   | Overloaded (processes waiting)           |                |
+| >> CPU cores  | Heavily overloaded, potential bottleneck |much greater than|
+| ≈ 0.00        | Very idle (may be underutilized)         |                |
+
+---
 
 #### 🖥️ CPU Debugging
 The 'w' command presents a snapshot of the system's operations, offering load averages for 1, 5, and 15-minute periods:
