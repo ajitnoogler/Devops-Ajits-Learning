@@ -48,3 +48,12 @@ I see Oracle as the right place to apply that expertise while growing with a tea
 
 To become a *Cloud Infrastructure Architect* with a strong grasp on hybrid/multi-cloud, performance engineering, and platform design. Oracle is the best place to make that transition.
 
+
+## 🧪 Tech + Soft Skills You Bring
+
+| Skill Type      | Examples                                      |
+|-----------------|-----------------------------------------------|
+| Troubleshooting | NSX-T, HCX, BGP/overlay, packet captures      |
+| Cross-Domain | Network + Compute + Security + Cloud |            
+| Communication | Handled war rooms, RCA reports, customer escalations |
+| Growth Mindset | Shifted from networking into compute/cloud SRE roles |
