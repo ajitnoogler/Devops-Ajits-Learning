@@ -2,7 +2,7 @@
 
 🟦 Situation:
 
-A VMC environment was accessed via AWS Application Load Balancer (ALB) fronted by AWS WAF. 
+A VMC environment was accessed via onprem fronted by AWS WAF in security VPC. 
 
 Users reported timeout or 403 errors when accessing vCenter only during 9 PM–12 AM IST, especially from a DevOps pipeline.
 
