@@ -8,7 +8,9 @@ During a planned NSX-T upgrade in a multi-VDI VMC environment, the customer repo
 
 ❌ What Went Wrong:
 	•	I validated Tier-1 and Tier-0 Uplink status, BGP, and Edge node health—all looked green.
+ 
 	•	I ignored Distributed Firewall (DFW) logging, assuming rules remained intact post-upgrade.
+ 
 	•	Reality: A security tag in the DFW rule set was not preserved correctly after the upgrade due to a bug in tag replication between NSX Manager nodes.
 
 ⸻
@@ -16,7 +18,9 @@ During a planned NSX-T upgrade in a multi-VDI VMC environment, the customer repo
 🛠 Recovery:
 	•	Reproduced the bug in a nested lab.
 	•	Opened a high-priority bug escalation with NSX Engineering.
+ 
 	•	Helped customer implement a workaround using static grouping.
+ 
 	•	Documented upgrade pre-check scripts for similar customer environments.
 
 ⸻
