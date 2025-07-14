@@ -1,4 +1,4 @@
-Hi, I’m Ajit Kumar Patel. I bring over 10 years of experience in enterprise networking, cloud infrastructure, and network virtualization 
+Hi, I’m Ajit Kumar Patel. I bring over 12+ years of experience in enterprise networking, cloud infrastructure, and network virtualization 
 
 — with deep expertise in NSX, HCX, SDN, and hybrid cloud setups across VMware, AWS, and OCI.
 
