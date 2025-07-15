@@ -34,6 +34,7 @@ A categorized view of various cyber threats, their types, and short descriptions
 | **13. Ransomware-as-a-Service (RaaS)** | Leased attack kits            | Ransomware provided as a service to cybercriminals. |
 | **14. Zero-Day Exploits**    | Unknown vulnerabilities                | Attacks exploiting bugs before they’re patched. |
 
+APT groups associated with the US are believed to be part of state intelligence and cyber operations units, primarily focused on cyber-espionage, cyber-sabotage, and counterintelligence.
 
 ---
 
