@@ -1,3 +1,6 @@
+
+#### Fortinet Learning Sequence
+
 Here’s a structured plan for your Fortinet self-paced training with:
 
 * 📆 Logical grouping by skill level
