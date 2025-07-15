@@ -3,11 +3,8 @@
 #### 🛡️ Cyber Threat Categories
 
 A categorized view of various cyber threats, their types, and short descriptions:
-# 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years)
 
-APT (Advanced Persistent Threat) groups are stealthy, nation-state-sponsored or highly organized cyber threat actors focused on long-term, targeted attacks.
-
-# 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years & Line Numbers)
+### 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years)
 
 APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or highly organized cyber threat actors targeting sensitive industries with long-term campaigns.
 
