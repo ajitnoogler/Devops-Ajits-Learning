@@ -34,8 +34,6 @@ A categorized view of various cyber threats, their types, and short descriptions
 | **13. Ransomware-as-a-Service (RaaS)** | Leased attack kits            | Ransomware provided as a service to cybercriminals. |
 | **14. Zero-Day Exploits**    | Unknown vulnerabilities                | Attacks exploiting bugs before they’re patched. |
 
-APT groups associated with the US are believed to be part of state intelligence and cyber operations units, primarily focused on cyber-espionage, cyber-sabotage, and counterintelligence.
-
 ---
 
 ### 🎯 Advanced Persistent Threat (APT) Groups and Attacks
@@ -110,5 +108,6 @@ APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or hig
 | 16     | **Regin** (linked)    | NSA (alleged), GCHQ (UK)       | ~2003–2013             | EU telecoms, political targets          | Data exfiltration from telecom backbones      |
 | 17     | **Lamberts**          | US (alleged, unconfirmed)      | ~2008–2017             | Middle East, Asia, EU targets           | Complex malware framework (Gray, Red, Blue Lambert) |
 
+* IMP: APT groups associated with the US are believed to be part of state intelligence and cyber operations units, primarily focused on cyber-espionage, cyber-sabotage, and counterintelligence.
 
 ---
