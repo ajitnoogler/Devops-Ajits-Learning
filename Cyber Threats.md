@@ -34,6 +34,7 @@ A categorized view of various cyber threats, their types, and short descriptions
 | **13. Ransomware-as-a-Service (RaaS)** | Leased attack kits            | Ransomware provided as a service to cybercriminals. |
 | **14. Zero-Day Exploits**    | Unknown vulnerabilities                | Attacks exploiting bugs before they’re patched. |
 
+
 ---
 
 ### 🎯 Advanced Persistent Threat (APT) Groups and Attacks
@@ -104,6 +105,9 @@ APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or hig
 | 14    | **SideWinder**              | India              | ~2012                      | Pakistan military & gov              | Android & phishing campaigns                     |
 | 15    | **Naikon**                  | China              | 2010–2015, 2020 resurgence | ASEAN governments                    | Aria-body malware, intel gathering               |
 | 16    | **Equation Group**          | USA (NSA-linked)   | 2001–2015 (leaked 2016)    | Global infra, telecom, nuclear       | Stuxnet (2010), Flame, DoubleFantasy             |
+| 15     | **Equation Group**    | NSA (Tailored Access Operations - TAO) | 2001–2015 (exposed 2016) | Telecom, nuclear, defense, global targets | **Stuxnet**, Flame, DoubleFantasy, Fanny worm |
+| 16     | **Regin** (linked)    | NSA (alleged), GCHQ (UK)       | ~2003–2013             | EU telecoms, political targets          | Data exfiltration from telecom backbones      |
+| 17     | **Lamberts**          | US (alleged, unconfirmed)      | ~2008–2017             | Middle East, Asia, EU targets           | Complex malware framework (Gray, Red, Blue Lambert) |
 
 
 ---
