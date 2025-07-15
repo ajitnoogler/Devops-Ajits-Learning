@@ -34,31 +34,6 @@ A categorized view of various cyber threats, their types, and short descriptions
 | **13. Ransomware-as-a-Service (RaaS)** | Leased attack kits            | Ransomware provided as a service to cybercriminals. |
 | **14. Zero-Day Exploits**    | Unknown vulnerabilities                | Attacks exploiting bugs before they’re patched. |
 
-
-### 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years)
-
-APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or highly organized cyber threat actors targeting sensitive industries with long-term campaigns.
-
-| 🔢 No. | 🧠 APT Group (Alias)        | 🌍 Origin          | 🗓️ Year / Active Since       | 🎯 Common Targets                    | 🗂️ Notable Attacks / Campaigns                    |
-|-------|-----------------------------|--------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
-| 1     | **APT1** (Comment Crew)     | China              | 2006–2013                  | U.S. defense, aerospace, tech        | Operation Shady RAT, Unit 61398 report           |
-| 2     | **APT3** (Buckeye)          | China              | ~2010                      | Aerospace, critical infrastructure   | Pirpi malware, Windows zero-days                 |
-| 3     | **APT10** (Stone Panda)     | China              | 2009–2017                  | MSPs, government, healthcare         | Operation Cloud Hopper                           |
-| 4     | **APT28** (Fancy Bear)      | Russia             | ~2007–present              | NATO, political orgs, media          | DNC Hack (2016), Olympic Destroyer               |
-| 5     | **APT29** (Cozy Bear)       | Russia             | ~2008–present              | Governments, think tanks, embassies  | SolarWinds Attack (2020)                         |
-| 6     | **Sandworm** (BlackEnergy)  | Russia             | ~2014                      | Energy sector, Ukraine               | Ukraine power grid (2015), NotPetya (2017)       |
-| 7     | **Lazarus Group**           | North Korea        | 2009–present               | Banking, crypto, defense             | Sony Hack (2014), WannaCry (2017), crypto thefts |
-| 8     | **APT33** (Elfin)           | Iran               | ~2013                      | Aerospace, energy, Saudi firms       | Shamoon variants, phishing                       |
-| 9     | **APT34** (OilRig)          | Iran               | ~2014                      | Finance, telecom, Middle East        | DNS hijacking, QUADAGENT                         |
-| 10    | **APT35** (Charming Kitten) | Iran               | 2011–present               | Journalists, dissidents, academia    | Spoofed media sites, phishing                    |
-| 11    | **APT32** (OceanLotus)      | Vietnam            | ~2012                      | SE Asian govts, businesses           | Watering hole attacks, macOS malware             |
-| 12    | **DarkHotel**               | South Korea (suspected) | ~2007                 | Executives in luxury hotels          | WiFi injection, backdoor tools                   |
-| 13    | **Turla** (Snake, Venomous Bear) | Russia        | 2004–present               | EU, embassies, diplomats             | Snake malware, satellite C2                      |
-| 14    | **SideWinder**              | India              | ~2012                      | Pakistan military & gov              | Android & phishing campaigns                     |
-| 15    | **Naikon**                  | China              | 2010–2015, 2020 resurgence | ASEAN governments                    | Aria-body malware, intel gathering               |
-| 16    | **Equation Group**          | USA (NSA-linked)   | 2001–2015 (leaked 2016)    | Global infra, telecom, nuclear       | Stuxnet (2010), Flame, DoubleFantasy             |
-
-
 ---
 
 ### 🎯 Advanced Persistent Threat (APT) Groups and Attacks
@@ -104,5 +79,31 @@ Influence: Manipulating public opinion (e.g., election interference)
 | 🌐 **C2 (Command & Control)** | Remote access to control infected systems  |
 | 🕵️ **Lateral Movement**      | Expanding inside the network after breach  |
 | 📤 **Data Exfiltration**      | Secretly transferring sensitive data out   |
+
+---
+
+### 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years)
+
+APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or highly organized cyber threat actors targeting sensitive industries with long-term campaigns.
+
+| 🔢 No. | 🧠 APT Group (Alias)        | 🌍 Origin          | 🗓️ Year / Active Since       | 🎯 Common Targets                    | 🗂️ Notable Attacks / Campaigns                    |
+|-------|-----------------------------|--------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
+| 1     | **APT1** (Comment Crew)     | China              | 2006–2013                  | U.S. defense, aerospace, tech        | Operation Shady RAT, Unit 61398 report           |
+| 2     | **APT3** (Buckeye)          | China              | ~2010                      | Aerospace, critical infrastructure   | Pirpi malware, Windows zero-days                 |
+| 3     | **APT10** (Stone Panda)     | China              | 2009–2017                  | MSPs, government, healthcare         | Operation Cloud Hopper                           |
+| 4     | **APT28** (Fancy Bear)      | Russia             | ~2007–present              | NATO, political orgs, media          | DNC Hack (2016), Olympic Destroyer               |
+| 5     | **APT29** (Cozy Bear)       | Russia             | ~2008–present              | Governments, think tanks, embassies  | SolarWinds Attack (2020)                         |
+| 6     | **Sandworm** (BlackEnergy)  | Russia             | ~2014                      | Energy sector, Ukraine               | Ukraine power grid (2015), NotPetya (2017)       |
+| 7     | **Lazarus Group**           | North Korea        | 2009–present               | Banking, crypto, defense             | Sony Hack (2014), WannaCry (2017), crypto thefts |
+| 8     | **APT33** (Elfin)           | Iran               | ~2013                      | Aerospace, energy, Saudi firms       | Shamoon variants, phishing                       |
+| 9     | **APT34** (OilRig)          | Iran               | ~2014                      | Finance, telecom, Middle East        | DNS hijacking, QUADAGENT                         |
+| 10    | **APT35** (Charming Kitten) | Iran               | 2011–present               | Journalists, dissidents, academia    | Spoofed media sites, phishing                    |
+| 11    | **APT32** (OceanLotus)      | Vietnam            | ~2012                      | SE Asian govts, businesses           | Watering hole attacks, macOS malware             |
+| 12    | **DarkHotel**               | South Korea (suspected) | ~2007                 | Executives in luxury hotels          | WiFi injection, backdoor tools                   |
+| 13    | **Turla** (Snake, Venomous Bear) | Russia        | 2004–present               | EU, embassies, diplomats             | Snake malware, satellite C2                      |
+| 14    | **SideWinder**              | India              | ~2012                      | Pakistan military & gov              | Android & phishing campaigns                     |
+| 15    | **Naikon**                  | China              | 2010–2015, 2020 resurgence | ASEAN governments                    | Aria-body malware, intel gathering               |
+| 16    | **Equation Group**          | USA (NSA-linked)   | 2001–2015 (leaked 2016)    | Global infra, telecom, nuclear       | Stuxnet (2010), Flame, DoubleFantasy             |
+
 
 ---
