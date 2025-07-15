@@ -4,6 +4,37 @@
 
 A categorized view of various cyber threats, their types, and short descriptions:
 
+| 🔒 Category                    | 🧨 Threat Type                          | 💡 Description |
+|------------------------------|----------------------------------------|----------------|
+| **1. Malware**               | Virus, Worm, Trojan, Ransomware        | Malicious software that infects, damages, or steals data from systems. |
+|                              | Spyware, Adware, Rootkits              | Used for spying, displaying ads, or gaining privileged access. |
+| **2. Phishing & Social Eng.**| Phishing, Spear Phishing               | Deceptive emails or messages trick users into revealing sensitive data. |
+|                              | Vishing, Smishing                      | Voice or SMS-based phishing attacks. |
+|                              | Pretexting, Baiting                    | Psychological manipulation to gain trust and access. |
+| **3. Denial of Service (DoS)**| DoS, DDoS                              | Overwhelms systems/networks to make them unavailable. |
+|                              | Application-layer attacks              | Targets specific apps (e.g., HTTP flood). |
+| **4. Insider Threats**       | Malicious Insider                      | Employee intentionally causing harm. |
+|                              | Negligent Insider                      | Unintended errors like misconfigurations or data leaks. |
+|                              | Compromised Insider                    | Account hijacked by attacker. |
+| **5. Credential Attacks**    | Brute Force, Dictionary Attack         | Repeated login attempts to guess passwords. |
+|                              | Credential Stuffing                    | Reusing stolen credentials from other breaches. |
+|                              | Keylogging                             | Capturing keystrokes to steal credentials. |
+| **6. Web-Based Threats**     | SQL Injection, XSS, CSRF               | Exploits vulnerabilities in web apps to gain access or run scripts. |
+|                              | Drive-by Downloads                     | Malware downloaded without user consent. |
+|                              | Malvertising                          | Ads that deliver malware when clicked or viewed. |
+| **7. Network Threats**       | Man-in-the-Middle (MitM)               | Eavesdropping or altering communication between two parties. |
+|                              | DNS Spoofing, ARP Poisoning            | Redirecting traffic to malicious sites or machines. |
+| **8. Cloud Threats**         | Misconfigured Cloud Storage            | Open buckets or containers leaking data. |
+|                              | Cloud Jacking, Insecure APIs           | Gaining unauthorized access or exploiting cloud interfaces. |
+| **9. Mobile Threats**        | Malicious Apps, Jailbreak Exploits     | Apps with hidden malware or rooting devices. |
+|                              | Bluetooth/Wi-Fi Sniffing               | Intercepting unprotected data over wireless networks. |
+| **10. Advanced Persistent Threats (APT)** | Nation-state/targeted attacks | Long-term, stealthy attacks aimed at specific entities (govt, corp). |
+| **11. IoT Threats**          | Botnets (e.g., Mirai), Device Hijack   | Exploiting poorly secured smart devices for attacks. |
+| **12. Supply Chain Attacks** | Software/Tainted Updates               | Compromising trusted software or vendors to infiltrate systems. |
+| **13. Ransomware-as-a-Service (RaaS)** | Leased attack kits            | Ransomware provided as a service to cybercriminals. |
+| **14. Zero-Day Exploits**    | Unknown vulnerabilities                | Attacks exploiting bugs before they’re patched. |
+
+
 ### 🎯 Advanced Persistent Threat (APT) Groups and Attacks (with Years)
 
 APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or highly organized cyber threat actors targeting sensitive industries with long-term campaigns.
@@ -74,29 +105,4 @@ Influence: Manipulating public opinion (e.g., election interference)
 | 🕵️ **Lateral Movement**      | Expanding inside the network after breach  |
 | 📤 **Data Exfiltration**      | Secretly transferring sensitive data out   |
 
-
 ---
-#### 🎯 Advanced Persistent Threat (APT) Groups and Attacks
-
-APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or highly organized threat actors focused on long-term espionage or sabotage.
-
-| 🧠 APT Group (Alias)        | 🌍 Suspected Origin | 🎯 Common Targets               | 🗂️ Notable Attacks / Campaigns                          |
-|----------------------------|---------------------|----------------------------------|--------------------------------------------------------|
-| **APT1** (Comment Crew)     | China               | U.S. military, aerospace         | Operation Shady RAT, Unit 61398                        |
-| **APT3** (Buckeye)          | China               | Aerospace, defense               | Pirpi malware, exploit of Windows zero-days            |
-| **APT10** (Stone Panda)     | China               | MSPs, government, healthcare     | Operation Cloud Hopper                                 |
-| **APT28** (Fancy Bear)      | Russia              | NATO, political entities         | DNC Hack (2016), Olympic Destroyer                     |
-| **APT29** (Cozy Bear)       | Russia              | Governments, think tanks         | SolarWinds Supply Chain Attack (2020)                  |
-| **Sandworm** (BlackEnergy)  | Russia              | Energy, Ukraine infrastructure   | Ukraine Power Grid Attack, NotPetya                    |
-| **Lazarus Group**           | North Korea         | Banks, crypto, media             | Sony Hack (2014), WannaCry (2017), crypto heists       |
-| **APT33** (Elfin)           | Iran                | Oil & gas, aerospace             | Shamoon malware campaigns                              |
-| **APT34** (OilRig)          | Iran                | Middle East energy, finance      | DNS hijacking, QUADAGENT malware                       |
-| **APT35** (Charming Kitten) | Iran                | Journalists, academics           | Phishing campaigns on Gmail and LinkedIn               |
-| **OceanLotus** (APT32)      | Vietnam             | Foreign businesses, governments  | Malware targeting SE Asian nations                     |
-| **DarkHotel**               | South Korea (suspected) | Executives in luxury hotels | WiFi-based malware injection in hotels                 |
-| **Turla** (Snake, Venomous Bear) | Russia         | Diplomats, EU, embassies         | Watering hole attacks, Snake malware                   |
-| **SideWinder**              | India               | Pakistani/Military entities      | Mobile surveillance, phishing attacks                  |
-| **Naikon**                  | China               | ASEAN governments                | Backdoor exploits in state communication               |
-| **Equation Group**          | USA (NSA-linked)    | Global telecom, gov, infrastructure | Stuxnet (Iran), Flame, Regin                          |
-
-####
