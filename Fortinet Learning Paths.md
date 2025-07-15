@@ -1,5 +1,5 @@
 
-#### Fortinet Learning Sequence
+## Fortinet Learning Sequence
 
 Here’s a structured plan for your Fortinet self-paced training with:
 
@@ -10,7 +10,7 @@ Here’s a structured plan for your Fortinet self-paced training with:
 
 ---
 
-## 🧭 **Total Time Required: `75 hours`**
+### 🧭 **Total Time Required: `75 hours`**
 
 ---
 
@@ -71,13 +71,13 @@ Focus: Troubleshooting, enterprise firewalling, and SOC design.
 
 ## 📊 **Summary Table**
 
-| Phase                        | Modules        | Duration       |
-| ---------------------------- | -------------- | -------------- |
-| 🧭 Foundation                | 2              | `7 hrs`        |
-| 🛠️ Core FortiGate           | 3              | `25 hrs`       |
-| ☁️ Cloud & Edge Security     | 3              | `15 hrs`       |
-| 🧠 Advanced Support & Design | 3              | `28 hrs`       |
-| **🎯 Total**                 | **11 modules** | **`75 hours`** |
+| Phase                            | Modules        | Duration       |
+| ---------------------------------| -------------- | -------------- |
+| 1. 🧭 Foundation                | 2              | `7 hrs`        |
+| 2. 🛠️ Core FortiGate            | 3              | `25 hrs`       |
+| 3. ☁️ Cloud & Edge Security     | 3              | `15 hrs`       |
+| 4. 🧠 Advanced Support & Design | 3              | `28 hrs`       |
+| **🎯 Total**                    | **11 modules** | **`75 hours`** |
 
 ---
 
