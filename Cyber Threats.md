@@ -103,10 +103,10 @@ APT (Advanced Persistent Threat) groups are stealthy, nation-state-backed or hig
 | 13    | **Turla** (Snake, Venomous Bear) | Russia        | 2004–present               | EU, embassies, diplomats             | Snake malware, satellite C2                      |
 | 14    | **SideWinder**              | India              | ~2012                      | Pakistan military & gov              | Android & phishing campaigns                     |
 | 15    | **Naikon**                  | China              | 2010–2015, 2020 resurgence | ASEAN governments                    | Aria-body malware, intel gathering               |
-| 16    | **Equation Group**          | USA (NSA-linked)   | 2001–2015 (leaked 2016)    | Global infra, telecom, nuclear       | Stuxnet (2010), Flame, DoubleFantasy             |
-| 15     | **Equation Group**    | NSA (Tailored Access Operations - TAO) | 2001–2015 (exposed 2016) | Telecom, nuclear, defense, global targets | **Stuxnet**, Flame, DoubleFantasy, Fanny worm |
-| 16     | **Regin** (linked)    | NSA (alleged), GCHQ (UK)       | ~2003–2013             | EU telecoms, political targets          | Data exfiltration from telecom backbones      |
-| 17     | **Lamberts**          | US (alleged, unconfirmed)      | ~2008–2017             | Middle East, Asia, EU targets           | Complex malware framework (Gray, Red, Blue Lambert) |
+| 16    | **Equation Group**          | USA ( assumed  NSA-linked)   | 2001–2015 (leaked 2016)    | Global infra, telecom, nuclear       | Stuxnet (2010), Flame, DoubleFantasy             |
+| 15     | **Equation Group**    | assumed NSA (Tailored Access Operations - TAO) | 2001–2015 (exposed 2016) | Telecom, nuclear, defense, global targets | **Stuxnet**, Flame, DoubleFantasy, Fanny worm |
+| 16     | **Regin** (linked)    | NSA (assumed), GCHQ (UK)       | ~2003–2013             | EU telecoms, political targets          | Data exfiltration from telecom backbones      |
+| 17     | **Lamberts**          | US (assumed , unconfirmed)      | ~2008–2017             | Middle East, Asia, EU targets           | Complex malware framework (Gray, Red, Blue Lambert) |
 
 * IMP: APT groups associated with the US are believed to be part of state intelligence and cyber operations units, primarily focused on cyber-espionage, cyber-sabotage, and counterintelligence.
 
