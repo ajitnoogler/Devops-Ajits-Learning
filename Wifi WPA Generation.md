@@ -156,3 +156,69 @@ Client              ↔            Access Point
 
 ---
 
+#### WPA2 Disconnect Message Flow (Unprotected)
+
+```plaintext
+
+Client        ←→        Access Point (AP)
+
+   ← Deauthentication (AP kicks client)
+   OR
+   → Disassociation (Client wants to leave)
+```
+
+#####  🧨 Vulnerability:
+
+These frames are unencrypted in WPA2.
+
+Makes WPA2 vulnerable to:
+
+Deauthentication attacks (e.g., aireplay-ng --deauth)
+
+Man-in-the-middle setups
+
+Session hijacking attempts
+
+---
+
+#### 🛡️ WPA3 Disconnect Handshake
+
+🔄 Key Difference: Protected Management Frames (PMF)
+
+WPA3 mandates PMF (802.11w)
+
+#### 🔐 WPA3 Teardown Flow
+```plaintext
+Client        ←→        Access Point (AP)
+
+   ← Deauthentication (Protected frame)
+   OR
+   → Disassociation (Protected frame)
+```
+---
+
+#### ✅ Security Benefits:
+
+Deauth/disassoc frames are:
+
+  - Cryptographically signed
+
+  - Rejected if spoofed
+
+Prevents:
+
+  - Deauth flooding
+
+  - Session resets via fake disconnects
+
+---
+
+#### WPA2 vs WPA3 Disconnect Summary
+
+| Feature                 | WPA2                      | WPA3                         |
+| ----------------------- | ------------------------- | ---------------------------- |
+| **Frame Protection**    | ❌ Unprotected             | ✅ Encrypted (PMF)            |
+| **Attackable?**         | ✅ Susceptible to spoofing | ❌ Protected against spoofing |
+| **Common Attacks**      | Deauth attack (DoS)       | Not feasible                 |
+| **Tool-based Spoofing** | Easy with `aircrack-ng`   | Not effective                |
+
