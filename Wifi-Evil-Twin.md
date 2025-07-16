@@ -449,7 +449,34 @@ ip.addr == 10.0.0.1                # Evil Twin server traffic
         |                                                  |
         x------------ No packets go to real Google.com ----x   🌐 Blocked
 
+---
 
+```text
++-------------------+             +----------------------+             +------------------------+
+|   Victim Device   |             |   Evil Twin Gateway  |             |     Real google.com    |
+|   (10.0.0.10)     |             |   (10.0.0.1 / eth0)   |             |     (142.250.x.x)       |
++-------------------+             +----------------------+             +------------------------+
+        |                                      |                                      |
+        |--------(1) DHCP Discover ----------->|                                      |
+        |<-------(2) DHCP Offer ---------------|   IP, DNS, Gateway = 10.0.0.1        |
+        |                                      |                                      |
+        |--------(3) DNS Query: google.com --->|                                      |
+        |<-------(4) DNS Reply: Real IP -------| → google.com = 142.250.190.14        |
+        |                                      |                                      |
+        |--------(5) TCP SYN to 142.250.x.x -->|                                      |
+        |                                      |--------(6) TCP SYN ----------------->|
+        |                                      |<-------(7) SYN-ACK ------------------|
+        |<-------(8) SYN-ACK ------------------|                                      |
+        |--------(9) ACK --------------------->|--------(10) ACK -------------------->|
+        |                                      |                                      |
+        |--------(11) TLS Client Hello ------->|--------(12) TLS Client Hello ------->|
+        |<-------(13) TLS Server Hello --------|<-------(14) TLS Server Hello --------|
+        |                                      |                                      |
+        |--------(15) Encrypted HTTPS traffic->|--------(16) Forward to Google ------>|
+        |<-------(17) Encrypted response <-----|<-------(18) From Google -------------|
+        |                                      |                                      |
+
+```
 ---
 
 #### 🧠 Summary:
