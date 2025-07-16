@@ -3,12 +3,14 @@
 
 | 🧪 Metric       | 📘 Definition                                                                 | 📏 Unit              | 🎯 What It Affects                            | 🛠️ Tools to Measure              |
 |----------------|--------------------------------------------------------------------------------|----------------------|-----------------------------------------------|----------------------------------|
-| **Speed**       | How fast data can move over a link/interface                                 | Mbps / Gbps          | Device-to-device communication                | ethtool, NIC specs               |
-| **Bandwidth**   | Maximum capacity of a link (what it can carry)                               | Mbps / Gbps          | Potential throughput, max possible transfer   | iperf, speedtest-cli             |
-| **Throughput**  | Actual data successfully transferred per second                              | Mbps / Gbps          | Real performance experienced by users         | iperf, SNMP, Wireshark           |
-| **Latency**     | Time it takes for a packet to travel from source to destination (RTT)        | ms (milliseconds)    | App responsiveness (VoIP, gaming, DB queries) | ping, traceroute, mtr            |
-| **Jitter**      | Variation in latency between packets (delay inconsistency)                   | ms                   | Audio/video quality (VoIP, Zoom, Teams)       | ping, VoIP QoS test tools        |
-| **Packet Loss** | Percentage of packets that fail to reach destination                         | %                    | Streaming, voice, retransmissions             | ping, iperf, smokeping           |
+| **Speed**       | Maximum rate at which data can be transmitted over a network interface        | Mbps / Gbps          | Physical/network device capability            | ethtool, NIC specs               |
+| **Bandwidth**   | Maximum capacity of a network link                                            | Mbps / Gbps          | Theoretical upper limit of throughput         | iperf, speedtest-cli             |
+| **Throughput**  | Actual data successfully transmitted per second                               | Mbps / Gbps          | Real-world performance                        | iperf, SNMP, Wireshark           |
+| **Latency**     | Time taken for a packet to travel from source to destination and back (RTT)  | ms (milliseconds)    | App responsiveness (VoIP, gaming, APIs)       | ping, traceroute, mtr            |
+| **Delay**       | Time between sending a packet and its arrival at the destination (one-way)   | ms (milliseconds)    | Real-time communication, streaming            | OWAMP, traceroute, packet capture|
+| **Jitter**      | Variation in packet delay (inconsistent latency)                              | ms                   | Call/video quality (VoIP, video meetings)     | ping, VoIP test tools            |
+| **Packet Loss** | % of packets lost during transmission                                         | %                    | VoIP, retransmissions, video buffering        | iperf, ping, smokeping           |
+
 ```
 
 ---
