@@ -201,4 +201,37 @@ SecRule REQUEST_URI|ARGS|REQUEST_HEADERS "@rx <script|onerror=|alert\(" \
 
 ---
 
+#### 🛡️ Top WAF Vendors (2025) - Effectiveness in Detecting Web Vulnerabilities
 
+List of top WAF vendors known for their effectiveness in detecting and blocking web vulnerabilities, including OWASP Top 10 threats like SQLi, XSS, CSRF, RFI/LFI, file upload attacks, and more:
+
+
+| 🔢 Rank | 🏢 Vendor        | 💻 Product/Service              | 🧠 Key Strengths                                                                 | 📌 Use Case                          |
+|--------|------------------|--------------------------------|----------------------------------------------------------------------------------|--------------------------------------|
+| 1      | Imperva          | Imperva Cloud WAF / On-Prem    | Industry-leading detection, bot protection, threat intelligence                  | Enterprise, Healthcare, Finance      |
+| 2      | AWS              | AWS WAF                        | Seamless AWS integration, managed rules, autoscaling                             | AWS-native apps, APIs                |
+| 3      | Cloudflare       | Cloudflare WAF                 | Edge-based protection, fast updates, excellent bot/DDoS mitigation               | High-traffic websites, SaaS          |
+| 4      | Akamai           | Kona Site Defender             | CDN + WAF combo, granular rule management, large-scale performance               | Gaming, eCommerce, Media             |
+| 5      | F5               | BIG-IP Advanced WAF            | Behavioral detection, L7 DDoS, credential stuffing & brute force prevention      | Hybrid cloud, Service Providers      |
+| 6      | Fortinet         | FortiWeb                       | AI-based detection, Fortinet ecosystem, custom rules                             | Mid-large enterprises, MSSPs         |
+| 7      | Barracuda        | CloudGen WAF                   | Easy GUI, strong API protection, good value for SMB                              | SMBs, DevOps environments            |
+| 8      | Radware          | AppWall                        | Web DDoS protection, behavioral profiling, integration with ADC                  | Government, Financial institutions   |
+| 9      | ModSecurity (FOSS)| ModSecurity + OWASP CRS       | Free, highly customizable, OWASP ruleset coverage                                | Developers, Linux/Apache/Nginx users |
+| 10     | Microsoft Azure  | Azure WAF (Front Door, AGW)    | Azure-native integration, auto-patch rules, good for global API protection       | Azure apps, Corporate portals        |
+
+---
+
+#### 🧠 Evaluation Criteria for “Effective” WAF
+
+| Criterion                               | Why it Matters                                    |
+| --------------------------------------- | ------------------------------------------------- |
+| ✅ OWASP Top 10 Coverage                 | Blocks SQLi, XSS, LFI, etc. reliably              |
+| 🧠 Machine Learning/Behavioral Analysis | Detects zero-day or bypass techniques             |
+| 🔍 Signature + Anomaly Detection        | Combines static and dynamic methods               |
+| 🌐 Bot Management                       | Detects scrapers, credential stuffing             |
+| 🔁 Auto-updating Rulesets               | Keeps protection current without manual work      |
+| 📊 Logging & Alerting                   | Forensics and incident response visibility        |
+| 📡 CDN Integration                      | Improves latency and global protection            |
+| 🤖 API Protection                       | JSON inspection, rate limiting, schema validation |
+
+---
