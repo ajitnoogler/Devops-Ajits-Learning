@@ -38,6 +38,28 @@ A **WAF (Web Application Firewall)** is a **security solution** that **monitors,
 
 ---
 
+#### 🌐 Generations of Web Application Firewalls (WAF)
+
+| 🔢 Generation | 📅 Era        | 🧠 Core Technology                     | 🛡️ Capabilities                                     | ⚙️ Limitations                                  |
+|---------------|--------------|----------------------------------------|----------------------------------------------------|-------------------------------------------------|
+| 1️⃣ First Gen  | Early 2000s  | Signature-based, Regex Rules           | Blocks known attacks (e.g., SQLi, XSS) via patterns| Limited to static rules; easy to bypass         |
+| 2️⃣ Second Gen | Mid 2000s–2015 | Stateful Inspection, Protocol Parsing | Context-aware filtering, deeper packet inspection  | High false positives, hard rule management      |
+| 3️⃣ Third Gen  | 2015–2020   | Machine Learning, Behavioral Analysis  | Anomaly detection, bot management, virtual patching| Requires tuning, slower to react to new threats |
+| 4️⃣ Fourth Gen | 2020–Now    | AI/ML + Threat Intelligence + Automation| Real-time learning, API protection, auto-mitigation| Complex deployment, cloud dependency            |
+| 5️⃣ Next Gen   | Ongoing     | Cloud-native, Zero Trust, WAAP         | Integrated DDoS, API Gateway, CI/CD security       | Vendor lock-in, complex cost models             |
+
+---
+
+#### 🧩 Legend:
+
+WAAP = Web Application & API Protection
+
+Zero Trust = No implicit trust, verify every request
+
+CI/CD Security = WAF integrated into DevSecOps pipeline
+
+---
+
 ## 🎯 Why is WAF Important?
 
 * Protects against **OWASP Top 10 vulnerabilities**
