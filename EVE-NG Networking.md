@@ -30,6 +30,16 @@ This is useful for scenarios where you need to simulate network environments wit
 
 #### Eve-NG Network Types:
 
+<img width="967" height="636" alt="image" src="https://github.com/user-attachments/assets/50bf3911-e1db-4406-bd5b-45bb95e81fa7" />
+
+
+### Bridge
+<img width="807" height="166" alt="image" src="https://github.com/user-attachments/assets/77a92ce3-01dd-4793-ac56-4abdf0d652fa" />
+
+#### Mgmt and NAT
+<img width="902" height="517" alt="image" src="https://github.com/user-attachments/assets/7169e99c-f861-48a8-a8f7-ea8fb4702f37" />
+
+
 ``` bash
 #### Bridge Network: 
 The EVE Bridge interface acts like an unmanaged Switch. It supports passing along tagged dot1q 
