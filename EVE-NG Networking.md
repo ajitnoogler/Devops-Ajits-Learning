@@ -2,7 +2,7 @@
 
 #### VMware Network Types:
 
-<img width="1231" height="780" alt="image" src="https://github.com/user-attachments/assets/43da9ae9-9ca2-4008-b563-0c3372f67cd6" />
+<img width="1772" height="855" alt="image" src="https://github.com/user-attachments/assets/59b1eca6-6963-42fc-9e2d-5af6511419b5" />
 
 
 ``` bash
