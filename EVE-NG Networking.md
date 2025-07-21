@@ -1,6 +1,6 @@
 #### EVE-NG Networking:
 
-
+```bash
 +---------------------------------------------------+
 |               Your Windows Laptop                 |
 |           (VMware Workstation Host)               |
@@ -42,6 +42,8 @@
                                        |  Ubuntu VM  |
                                        | eth0 → NET1 |
                                        +-------------+
+
+```
 
 * Fortigate mgmt connecting to bridge so your laptop can access fortigate GUI
 * Cisco Router G0/1 get ip from eve-ng nat subnet.
