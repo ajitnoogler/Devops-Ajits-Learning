@@ -1,0 +1,13 @@
+
+| Issue                                       | Possible Cause                                               | Solution                                                                                                       |
+| ------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| **Slow O365 performance**                   | POP location far from user; O365 traffic not optimized       | Ensure client connects to nearest POP (Anycast); enable O365-aware routing in SASE; review split-tunnel policy |
+| **DNS resolution failures**                 | SASE DNS proxy blocked; incorrect DNS policy                 | Check DNS rules in SASE; allow O365 FQDNs; verify DoH/DoT settings                                             |
+| **Authentication failure in ZTNA**          | Device posture check fails; SSO misconfiguration             | Verify posture profile; check IdP (Azure AD/Okta) integration; re-enroll device                                |
+| **SSL inspection breaks O365 apps**         | Office 365 certificate pinning; unsupported TLS interception | Bypass O365 URLs/IPs from SSL inspection per vendor’s official list                                            |
+| **CASB blocks legitimate actions**          | Overly strict SaaS policy                                    | Tune CASB policies for O365 sanctioned use; add exceptions for approved workflows                              |
+| **Email/Teams file uploads blocked by DLP** | DLP detects false positives                                  | Review DLP regex/patterns; whitelist specific trusted destinations                                             |
+| **Firewall blocks O365 traffic**            | FWaaS rules missing service tags or FQDN rules               | Add Microsoft 365 service tags/FQDN to allow list; avoid hardcoding IPs                                        |
+| **Tunnel drops frequently**                 | Unstable ISP; MTU mismatch                                   | Check tunnel keepalive settings; adjust MTU; test alternate ISP                                                |
+| **High latency for non-O365 apps**          | All traffic hairpinned through distant POP                   | Enable local breakout for non-sensitive traffic; review routing policies                                       |
+| **User cannot connect without client**      | ZTNA not set for clientless mode                             | Enable browser-based clientless access for approved SaaS apps                                                  |
