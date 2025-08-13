@@ -10,6 +10,7 @@
 | **Split Tunnel – Non-Tunnel Traffic** | `"C:\Program Files (x86)\CheckPoint\Endpoint Security\EPClient\tracer.exe" /start /filter "not host <gateway_IP>" /file "C:\Temp\split_tunnel.cap"` | `sudo tcpdump -i eth0 not host <gateway_IP> -w /tmp/split_tunnel.pcap` |
 | **Stop Capture**                      | `"C:\Program Files (x86)\CheckPoint\Endpoint Security\EPClient\tracer.exe" /stop`                                                                   | `sudo pkill tcpdump`                                                   |
 
+** Gateway-IP** - Harmony SASE / VPN Gateway’s IP address
 
 #### Harmony Client Packet Capture:
 - "C:\Program Files (x86)\CheckPoint\Endpoint Security\EPClient\tracer.exe" /start /file "C:\Temp\full_traffic.cap"
