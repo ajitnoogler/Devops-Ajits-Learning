@@ -60,5 +60,45 @@ Tue Aug 13 09:15:08 2025 Initialization Sequence Completed
 
 ---
 
+###  Common Push Configurations
+| Push Directive                                   | Purpose                                                                        | Example                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| **`route`**                                      | Pushes network routes so the client can reach internal subnets through the VPN | `push "route 10.0.0.0 255.255.255.0"` → routes client traffic to internal network `10.0.0.0/24` |
+| **`redirect-gateway`**                           | Sends all client traffic through the VPN (full-tunnel)                         | `push "redirect-gateway def1 bypass-dhcp"`                                                      |
+| **`dhcp-option` (DNS)**                          | Sets DNS servers for the client while connected                                | `push "dhcp-option DNS 8.8.8.8"` <br> `push "dhcp-option DNS 8.8.4.4"`                          |
+| **`dhcp-option` (Domain)**                       | Sets search domain for DNS resolution                                          | `push "dhcp-option DOMAIN example.com"`                                                         |
+| **`block-outside-dns`** (Windows only)           | Prevents DNS leaks on Windows clients                                          | `push "block-outside-dns"`                                                                      |
+| **`topology`**                                   | Specifies client subnet topology (net30, p2p, etc.)                            | `push "topology subnet"`                                                                        |
+| **`route-metric`**                               | Assigns priority to pushed routes                                              | `push "route 10.0.0.0 255.255.255.0 1"`                                                         |
+| **`ping/ping-restart`**                          | Keepalive to maintain VPN connectivity                                         | `push "ping 10"` <br> `push "ping-restart 120"`                                                 |
+| **`compression`** (deprecated in latest OpenVPN) | If enabled, client uses compression                                            | `push "compress lz4"`                                                                           |
+| **`client-config-dir`**                          | Can push client-specific config options                                        | Example: different routes or access per client                                                  |
 
+### Sample Push Config from Server
+```bash
+server 10.8.0.0 255.255.255.0
+push "route 10.0.1.0 255.255.255.0"
+push "route 10.0.2.0 255.255.255.0"
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 10.0.0.53"
+push "dhcp-option DOMAIN corp.local"
+push "block-outside-dns"
+```
 
+#### Explanation:
+
+- VPN subnet: 10.8.0.0/24
+- Internal routes pushed: 10.0.1.0/24, 10.0.2.0/24
+- All traffic routed through VPN (redirect-gateway)
+- DNS server pushed: 10.0.0.53
+- Domain search: corp.local
+- Block DNS leaks on Windows clients
+
+#### Client log example for Push Config:
+
+```bash
+PUSH: Received control message: 'PUSH_REPLY,route 10.0.1.0 255.255.255.0,route 10.0.2.0 255.255.255.0,dhcp-option DNS 10.0.0.53,dhcp-option DOMAIN corp.local,redirect-gateway def1,b
+lock-outside-dns'
+Options error: --block-outside-dns is not supported on this platform
+Initialization Sequence Completed
+```
