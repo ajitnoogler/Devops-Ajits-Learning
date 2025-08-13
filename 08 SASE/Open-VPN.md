@@ -94,6 +94,13 @@ push "block-outside-dns"
 - Domain search: corp.local
 - Block DNS leaks on Windows clients
 
+| Option             | Meaning                                                                                                                                                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `redirect-gateway` | Tells the client to replace its default route with the VPN route. Essentially, all traffic will flow through the VPN server.                                                                                                                     |
+| `def1`             | Uses **two new default routes (0.0.0.0/1 and 128.0.0.0/1)** instead of overwriting the original default route. This avoids removing the original gateway immediately, which improves reliability and compatibility with existing local networks. |
+| `bypass-dhcp`      | Prevents the VPN from redirecting DHCP traffic. Ensures that **local network DHCP (for LAN IP assignment)** still works and avoids conflicts when redirecting all traffic.                                                                       |
+
+
 #### Client log example for Push Config:
 
 ```bash
