@@ -1,8 +1,6 @@
 
-
-WireGuard is a modern, lightweight VPN protocol designed to be faster, simpler, and more secure than traditional VPN technologies like IPsec and OpenVPN.
-
 #### What is WireGuard?
+WireGuard is a modern, lightweight VPN protocol designed to be faster, simpler, and more secure than traditional VPN technologies like IPsec and OpenVPN.
 - Type: Layer 3 (network layer) VPN protocol
 - Transport: Runs over UDP only
 - Encryption: Uses state-of-the-art cryptography (Noise Protocol Framework)
