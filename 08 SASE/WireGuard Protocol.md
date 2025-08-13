@@ -61,7 +61,7 @@ A VPN (Virtual Private Network) needs:
     |   - Responder ephemeral pubkey (X25519)                          |
     |   - Encrypted static pubkey                                      |
     |   - Encrypted timestamp                                          |
-    |   - MAC1 / MAC2                                                  |
+    |   - MAC1 / MAC2                                                   |
 
     | *** Key derivation complete – both peers have session keys ***   |
 
@@ -70,8 +70,15 @@ A VPN (Virtual Private Network) needs:
     |   - Encrypted payload (ChaCha20-Poly1305)                        |
     |   - Message counter                                              |
 
-    | <----------------[Message 4: Transport Data]-------------------- |
-    |   - Receiver index
+    | <----------------[Message 4: Transport Data]------------------- |
+    |   - Receiver index                                               |
+    |   - Encrypted payload                                            |
+    |   - Message counter                                              |
+
+    | --[Optional: Cookie Reply]-------------------------------------> |
+    |   (Only if DoS protection triggered)                             |
+    |   - Receiver index                                               |
+    |   - Encrypted MAC key                                            |
 
 ```
 
@@ -172,4 +179,217 @@ No cipher negotiation is allowed, which avoids downgrade attacks and keeps confi
 | **Key Derivation Function (KDF)** | **HKDF** (using BLAKE2s)                | Derives keys from ECDH shared secrets                                            |
 | **Random Number Generation**      | **System RNG** + `libsodium` primitives | Secure randomness for key material                                               |
 | **Protocol Framework**            | **Noise\_IK**                           | Noise Protocol handshake pattern (“Initiator-Known”)                             |
+
+---
+
+<img width="1193" height="733" alt="image" src="https://github.com/user-attachments/assets/6c893ce1-9745-4448-a2ce-890345fc4ceb" />
+
+
+---
+
+Here’s a **step-by-step sample WireGuard deployment** on **Ubuntu** for a **Remote Access VPN client** scenario.
+We’ll configure:
+
+* **Server**: Ubuntu (acts as VPN gateway)
+* **Client**: Ubuntu laptop (remote user)
+
+---
+
+## **1. Install WireGuard**
+
+On **both server and client**:
+
+```bash
+sudo apt update
+sudo apt install wireguard
+```
+
+---
+
+## **2. Generate Keys**
+
+### On the **Server**:
+
+```bash
+cd /etc/wireguard
+umask 077
+wg genkey | tee server_private.key | wg pubkey > server_public.key
+```
+
+### On the **Client**:
+
+```bash
+cd /etc/wireguard
+umask 077
+wg genkey | tee client_private.key | wg pubkey > client_public.key
+```
+
+---
+
+## **3. Server Configuration**
+
+File: `/etc/wireguard/wg0.conf`
+
+```ini
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51820
+PrivateKey = SERVER_PRIVATE_KEY
+# Enable IP forwarding
+PostUp   = sysctl -w net.ipv4.ip_forward=1; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = sysctl -w net.ipv4.ip_forward=0; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+[Peer]
+# Client configuration on server side
+PublicKey = CLIENT_PUBLIC_KEY
+AllowedIPs = 10.0.0.2/32
+```
+
+Replace:
+
+* `SERVER_PRIVATE_KEY` → contents of `/etc/wireguard/server_private.key`
+* `CLIENT_PUBLIC_KEY` → contents of `/etc/wireguard/client_public.key`
+
+---
+
+## **4. Client Configuration**
+
+File: `/etc/wireguard/wg0.conf`
+
+```ini
+[Interface]
+Address = 10.0.0.2/24
+PrivateKey = CLIENT_PRIVATE_KEY
+DNS = 1.1.1.1
+
+[Peer]
+# Server configuration on client side
+PublicKey = SERVER_PUBLIC_KEY
+Endpoint = SERVER_PUBLIC_IP:51820
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 25
+```
+
+Replace:
+
+* `CLIENT_PRIVATE_KEY` → contents of `/etc/wireguard/client_private.key`
+* `SERVER_PUBLIC_KEY` → contents of `/etc/wireguard/server_public.key`
+* `SERVER_PUBLIC_IP` → public IP of your VPN server
+
+---
+
+## **5. Enable & Start WireGuard**
+
+On **both server and client**:
+
+```bash
+sudo wg-quick up wg0
+```
+
+Enable at boot:
+
+```bash
+sudo systemctl enable wg-quick@wg0
+```
+
+---
+
+## **6. Verify Connection**
+
+On **Server**:
+
+```bash
+sudo wg
+```
+
+You should see the client’s public key and latest handshake time.
+
+On **Client**:
+
+```bash
+ping 10.0.0.1
+ping 8.8.8.8
+```
+
+If `AllowedIPs = 0.0.0.0/0`, all internet traffic will route through the VPN.
+
+---
+
+## **7. Firewall & NAT Notes**
+
+* Ensure UDP port **51820** is open on the server’s firewall:
+
+```bash
+sudo ufw allow 51820/udp
+```
+
+* NAT is handled by the `iptables` `MASQUERADE` rule in **PostUp**.
+
+---
+
+✅ **Result:**
+
+* Remote client connects to WireGuard server over UDP.
+* Client gets IP `10.0.0.2`, can reach `10.0.0.1` and the corporate network.
+* All traffic is encrypted using WireGuard’s fixed crypto suite.
+
+---
+
+#### WireGuard Remote Access VPN setup
+
+```bash
+[Remote Client: Ubuntu Laptop]                  [VPN Server: Ubuntu @ HQ]
+     PrivateKey: client_private.key                  PrivateKey: server_private.key
+     PublicKey:  client_public.key                   PublicKey:  server_public.key
+     Address:    10.0.0.2/24                         Address:    10.0.0.1/24
+     Endpoint:   SERVER_PUBLIC_IP:51820 (UDP)        ListenPort: 51820/UDP
+     AllowedIPs: 0.0.0.0/0                           AllowedIPs: 10.0.0.2/32
+     DNS:        1.1.1.1
+
+          |---------------- Handshake Initiation ---------------->|
+          |<--------------- Handshake Response -------------------|
+          |<====== Encrypted Tunnel (ChaCha20 + Poly1305) =========>|
+          |             10.0.0.2 ↔ 10.0.0.1 (VPN subnet)            |
+          |                 Internet / Corporate LAN                |
+```
+
+---
+
+####  Ubuntu Remote Access VPN setup and the WireGuard handshake + data flow messages in one view.
+
+``` bash
+[Remote Client: Ubuntu Laptop]                     [VPN Server: Ubuntu @ HQ]
+  PrivateKey: client_private.key                      PrivateKey: server_private.key
+  PublicKey:  client_public.key                       PublicKey:  server_public.key
+  Address:    10.0.0.2/24                             Address:    10.0.0.1/24
+  Endpoint:   SERVER_PUBLIC_IP:51820 (UDP)            ListenPort: 51820/UDP
+  AllowedIPs: 0.0.0.0/0                               AllowedIPs: 10.0.0.2/32
+  DNS:        1.1.1.1                                 NAT to Internet / Corp LAN
+
+   --------------------------- WIREGUARD PACKET FLOW ---------------------------
+
+  (1) Handshake Initiation  -->  
+        - Ephemeral pubkey (Curve25519)
+        - Encrypted static pubkey
+        - Encrypted timestamp
+        - MAC1 / MAC2
+
+  <---  (2) Handshake Response
+        - Ephemeral pubkey (Curve25519)
+        - Encrypted static pubkey
+        - Encrypted timestamp
+        - MAC1 / MAC2
+
+  *** Session keys derived via ECDH + HKDF (BLAKE2s) ***
+
+  <===> (3) Encrypted Data (Transport Message)
+        - Receiver index
+        - Encrypted payload (ChaCha20)
+        - Poly1305 authentication tag
+        - Counter for replay protection
+
+  *** Tunnel Established ***
+       VPN Subnet: 10.0.0.2 ↔ 10.0.0.1
+       All client internet traffic passes via server (AllowedIPs = 0.0.0.0/0)
+```
 
