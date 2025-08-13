@@ -12,6 +12,8 @@ Key Features:
 
 - SWG (Secure Web Gateway) — URL filtering, malware scanning, DLP enforcement.
 
+- DLP: Content Inspection | SSL Decrypt | Regex Pattern Match PCI, GDPR, Credit Card, Social Sec No. | Context aware where data is going.
+
 - CASB Enforcement — Monitors SaaS activity for sanctioned/unsanctioned use.
 
 - O365 Optimization — Routes Office 365 traffic directly via optimized peering.
