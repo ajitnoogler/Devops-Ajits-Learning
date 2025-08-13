@@ -16,7 +16,9 @@ Key Features:
 
 - O365 Optimization — Routes Office 365 traffic directly via optimized peering.
 
-Split Tunnel Support — Allows selective breakout of non-corporate traffic.
+- Split Tunnel Support — Allows selective breakout of non-corporate traffic.
+
+--- 
 
 * **Common packet flow issues**
 * **Harmony-specific CLI/GUI checks**
