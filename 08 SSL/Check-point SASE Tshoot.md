@@ -6,6 +6,18 @@
 
 User Device → DNS Resolution for office 365 → Tunnel to SASE POP → ZTNA → SWG → CASB → FWaaS → DLP → O365 Optimization → Egress to Microsoft 365 Edge → Microsoft Tenant Services
 
+Key Features:
+
+- ZTNA (Zero Trust Network Access) — Identity and device posture validation before granting access.
+
+- SWG (Secure Web Gateway) — URL filtering, malware scanning, DLP enforcement.
+
+- CASB Enforcement — Monitors SaaS activity for sanctioned/unsanctioned use.
+
+- O365 Optimization — Routes Office 365 traffic directly via optimized peering.
+
+Split Tunnel Support — Allows selective breakout of non-corporate traffic.
+
 * **Common packet flow issues**
 * **Harmony-specific CLI/GUI checks**
 * **Packet capture points**
