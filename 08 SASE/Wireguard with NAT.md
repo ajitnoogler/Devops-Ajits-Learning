@@ -145,3 +145,138 @@ What’s Happening Here
 - Server/Remote Router behind NAT → requires UDP port forwarding.
 - PersistentKeepalive (10–25 seconds) prevents idle timeout.
 - Symmetric NAT may block direct peer-to-peer; use relay/public IP endpoint.
+
+### Example Client connecting without NAT:
+
+```bash
+Client: 203.0.113.50:52688  --->  Server: 198.51.100.7:51820 (UDP)
+
+```
+
+### With NAT on Server Side
+If server is behind NAT/firewall: Port forwarding is required for UDP server port (e.g., 51820) to the WireGuard server’s internal IP.
+
+```bash
+Client: 198.51.100.10:52688 ---> NAT Public IP: 203.0.113.10:51820
+                                  |
+                                  +-- Forward to Server: 10.0.0.5:51820
+
+```
+
+---
+
+### Special Notes
+- WireGuard only uses UDP, never TCP.
+- Server’s ListenPort stays constant; client source port may change with every reconnect or NAT remap.
+- If NAT in the middle changes ports dynamically (Symmetric NAT), direct peer-to-peer WireGuard between two NATed clients can fail without a relay or static port mapping.
+
+  ---
+
+  Here’s the **text-based port mapping diagram** for WireGuard in all four NAT scenarios:
+
+---
+
+## **Case 1 – No NAT**
+
+```bash
+[Client]
+  Private IP: 203.0.113.50
+  Source Port: 52688 (random UDP)
+      |
+      v
+[Internet]
+      |
+      v
+[Server]
+  Public IP: 198.51.100.7
+  ListenPort: 51820/UDP
+
+Flow: 203.0.113.50:52688 ---> 198.51.100.7:51820
+```
+
+---
+
+## **Case 2 – NAT at Client Side**
+
+```bash
+[Client Laptop]
+  Private IP: 192.168.1.50
+  Source Port: 52688 (random UDP)
+      |
+      v
+[Client NAT Router]
+  Public Mapping: 203.0.113.50:40000 --> Server: 198.51.100.7:51820
+      |
+      v
+[Server]
+  Public IP: 198.51.100.7
+  ListenPort: 51820/UDP
+
+Flow: 203.0.113.50:40000 ---> 198.51.100.7:51820
+(NAT changed source port)
+```
+
+---
+
+## **Case 3 – NAT at Server Side**
+
+```bash
+[Client]
+  Public IP: 198.51.100.10
+  Source Port: 52688 (random UDP)
+      |
+      v
+[Internet]
+      |
+      v
+[Server NAT/Firewall]
+  Public IP: 203.0.113.10:51820 (UDP)
+  Port Forward: 51820 --> 10.0.0.5:51820
+      |
+      v
+[WireGuard Server]
+  Private IP: 10.0.0.5
+  ListenPort: 51820/UDP
+
+Flow: 198.51.100.10:52688 ---> 203.0.113.10:51820 ---> 10.0.0.5:51820
+```
+
+---
+
+## **Case 4 – NAT at Both Client and Server**
+
+```bash
+[Client Laptop]
+  Private IP: 192.168.1.50
+  Source Port: 52688 (random UDP)
+      |
+      v
+[Client NAT Router]
+  Public Mapping: 198.51.100.10:40000
+      |
+      v
+[Internet]
+      |
+      v
+[Server NAT/Firewall]
+  Public IP: 203.0.113.10:51820
+  Port Forward: 51820 --> 10.0.0.5:51820
+      |
+      v
+[WireGuard Server]
+  Private IP: 10.0.0.5
+  ListenPort: 51820/UDP
+
+Flow: 198.51.100.10:40000 ---> 203.0.113.10:51820 ---> 10.0.0.5:51820
+```
+
+---
+
+### **Key Observations**
+
+* **Server ListenPort** stays the same in all cases (default 51820 UDP unless changed).
+* **Client Source Port** can be random and may be changed by NAT.
+* **PersistentKeepalive** prevents client-side NAT from dropping the mapping.
+* **Server-side NAT** always requires port forwarding for UDP 51820.
+
+---
