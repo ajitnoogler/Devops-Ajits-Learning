@@ -1,5 +1,5 @@
 
-#### What is WireGuard? Port- UDP 51820
+#### What is WireGuard? (Port- UDP 51820)
 WireGuard is a modern, lightweight VPN protocol designed to be faster, simpler, and more secure than traditional VPN technologies like IPsec and OpenVPN.
 - Type: Layer 3 (network layer) VPN protocol
 - Transport: Runs over UDP only
