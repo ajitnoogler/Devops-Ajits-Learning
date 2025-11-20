@@ -1,7 +1,8 @@
 ### grep: Search and Filter Text with Regex
 
 #### Description:
-grep is the most widely used command for searching text patterns in files or command output using regular expressions. It is indispensable for log analysis, troubleshooting, and automation.
+- grep is the most widely used command for searching text patterns in files or command output using regular expressions. 
+- It is indispensable for log analysis, troubleshooting, and automation.
 
 #### Common Use Cases:
 
@@ -30,6 +31,8 @@ Invert Match: Show lines that do NOT match a pattern.
 Example: grep -v "^#" /etc/fstab
 
 ### Most Important Use Case:
-Log Analysis and Troubleshooting
-Searching for specific error messages, failed login attempts, or security events in log files is the most critical use case. It allows administrators to quickly identify issues and respond to incidents.​
+Log Analysis and Troubleshooting:
+
+- Searching for specific error messages, failed login attempts, or security events in log files is the most critical use case. 
+- It allows administrators to quickly identify issues and respond to incidents.​
 
