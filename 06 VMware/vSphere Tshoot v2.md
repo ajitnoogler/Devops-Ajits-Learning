@@ -1,764 +1,682 @@
-# VMware vSphere Troubleshooting Runbook
+# VMware vSphere Troubleshooting Runbook - Scenario Based with Sample Logs
 
 ## Table of Contents
 
-\begin{enumerate}
-\item ESXi and vCenter Log Files
-\item Log Analysis Commands and Techniques
-\item Snapshot Troubleshooting
-\item vSphere HA (High Availability) Troubleshooting
-\item DRS (Distributed Resource Scheduler) Troubleshooting
-\item vMotion Troubleshooting
-\item Common Troubleshooting Commands
-\end{enumerate}
+1. [Introduction](#introduction)
+2. [ESXi and vCenter Log Files Overview](#log-files-overview)
+3. [Scenario 1: VM Snapshot Issues](#scenario-1-snapshot-issues)
+4. [Scenario 2: ESXi Host Not Responding/Disconnected](#scenario-2-host-disconnected)
+5. [Scenario 3: vSphere HA Failures](#scenario-3-ha-failures)
+6. [Scenario 4: DRS Not Working](#scenario-4-drs-not-working)
+7. [Scenario 5: vMotion Failures](#scenario-5-vmotion-failures)
+8. [General Troubleshooting Workflow](#general-troubleshooting)
+9. [Critical Commands Reference](#critical-commands)
+10. [Additional Resources](#additional-resources)
 
 ---
 
-## 1. ESXi and vCenter Log Files
+## Introduction
 
-### 1.1 ESXi Host Log Files
-
-**Primary ESXi Log Location:** `/var/log/`
-
-\begin{table}
-\begin{tabular}{|l|l|p{8cm}|}
-\hline
-\textbf{Log File} & \textbf{Location} & \textbf{Purpose} \\
-\hline
-vmkernel.log & /var/log/vmkernel.log & Core VMkernel operations, storage, networking, device drivers, resource allocation \\
-\hline
-hostd.log & /var/log/hostd.log & Host management service, VM operations, power on/off, API calls \\
-\hline
-vpxa.log & /var/log/vpxa.log & vCenter agent communication, vCenter connectivity issues \\
-\hline
-fdm.log & /var/log/fdm.log & HA (Fault Domain Manager) operations, master/slave elections \\
-\hline
-shell.log & /var/log/shell.log & ESXi Shell activity, CLI commands executed \\
-\hline
-syslog.log & /var/log/syslog.log & General system messages, hardware events \\
-\hline
-vobd.log & /var/log/vobd.log & VMware ESXi Observation service, hardware health \\
-\hline
-storageRM.log & /var/log/storageRM.log & Storage resource management, SIOC operations \\
-\hline
-vmkwarning.log & /var/log/vmkwarning.log & VMkernel warnings and errors \\
-\hline
-vmksummary.log & /var/log/vmksummary.log & Uptime and availability statistics \\
-\hline
-\end{tabular}
-\caption{ESXi Critical Log Files}
-\end{table}
-
-### 1.2 Virtual Machine Log Files
-
-**VM Log Location:** `/vmfs/volumes/<datastore>/<VM_name>/`
-
-\begin{table}
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{File} & \textbf{Purpose} \\
-\hline
-vmware.log & Current VM operations, errors, warnings \\
-\hline
-vmware-*.log & Archived VM logs (vmware-1.log, vmware-2.log, etc.) \\
-\hline
-vmx.log & VM configuration changes \\
-\hline
-*.vmdk & Virtual disk descriptor files \\
-\hline
-*.vmx & VM configuration file \\
-\hline
-*.vmsd & Snapshot metadata and state \\
-\hline
-*.vmsn & Snapshot state files (memory dump) \\
-\hline
-\end{tabular}
-\caption{Virtual Machine Files}
-\end{table}
-
-### 1.3 vCenter Server Appliance (VCSA) Log Files
-
-**Primary vCenter Log Location:** `/var/log/vmware/`
-
-\begin{table}
-\begin{tabular}{|l|l|p{7cm}|}
-\hline
-\textbf{Log File} & \textbf{Location} & \textbf{Purpose} \\
-\hline
-vpxd.log & /var/log/vmware/vpxd/ & vCenter Server daemon, all vCenter operations \\
-\hline
-vws.log & /var/log/vmware/vws/ & Web Services, vSphere Client connections \\
-\hline
-eam.log & /var/log/vmware/eam/ & ESX Agent Manager \\
-\hline
-cm.log & /var/log/vmware/cm/ & Certificate Manager \\
-\hline
-vcha.log & /var/log/vmware/vcha/ & vCenter High Availability \\
-\hline
-cloudvm.log & /var/log/vmware/cloudvm/ & VMware Cloud services \\
-\hline
-sps.log & /var/log/vmware/sps/ & Storage Policy Service \\
-\hline
-\end{tabular}
-\caption{vCenter Server Log Files}
-\end{table}
+This runbook provides scenario-based troubleshooting guidance for VMware vSphere environments, including sample log excerpts, step-by-step resolution procedures, and references to official VMware/Broadcom KB articles.
 
 ---
 
-## 2. Log Analysis Commands and Techniques
+## ESXi and vCenter Log Files Overview
 
-### 2.1 Essential Linux Commands for Log Analysis
+### ESXi Host Log Files (`/var/log/`)
 
-**Viewing Logs:**
+| Log File | Purpose | What to Check |
+|----------|---------|---------------|
+| vmkernel.log | Core VMkernel operations, storage, networking | I/O errors, storage disconnects, network timeouts, device failures |
+| hostd.log | Host management service, VM operations | API errors, VM operation failures, connection issues |
+| vpxa.log | vCenter agent communication | vCenter connectivity failures, agent errors |
+| fdm.log | HA operations, master/slave elections | Heartbeat losses, master election failures, isolation events |
+| shell.log | ESXi Shell command execution | Failed commands, unauthorized access |
+| syslog.log | System messages, hardware events | Hardware faults, kernel panics |
+| vobd.log | Hardware health monitoring | Device failures, hardware errors |
 
-# Tail last 100 lines of a log file
-tail -100 /var/log/vmkernel.log
+### VM Log Files (`/vmfs/volumes/<datastore>/<VM_name>/`)
 
-# Follow log in real-time
-tail -f /var/log/hostd.log
+| File | What to Check |
+|------|---------------|
+| vmware.log | VM startup/shutdown errors, runtime issues |
+| *.vmsd | Snapshot chain errors, metadata corruption |
+| *.vmdk | Disk descriptor errors, corruption |
 
-# View specific lines
-head -50 /var/log/vpxa.log
+### vCenter Server Log Files (`/var/log/vmware/`)
 
-# View entire log with paging
-less /var/log/fdm.log
-
-# View specific time range
-cat /var/log/vmkernel.log | grep "2025-11-20"
-
-**Searching with grep:**
-
-# Search for errors
-grep -i error /var/log/vmkernel.log
-
-# Search for warnings
-grep -i warning /var/log/hostd.log
-
-# Search with case-insensitive
-grep -i "snapshot" /var/log/vmkernel.log
-
-# Search multiple patterns
-grep -E "error|fail|timeout" /var/log/hostd.log
-
-# Search with context (3 lines before and after)
-grep -A 3 -B 3 "vmotion" /var/log/vpxa.log
-
-# Count occurrences
-grep -c "error" /var/log/vmkernel.log
-
-# Search recursively in directory
-grep -r "snapshot" /var/log/
-
-# Exclude lines
-grep -v "info" /var/log/hostd.log | grep error
-
-**Advanced Log Filtering:**
-
-# Find all errors in last hour
-find /var/log -name "*.log" -mmin -60 -exec grep -i error {} \;
-
-# Search for specific VM by name
-grep "VM_NAME" /var/log/hostd.log
-
-# Filter by timestamp
-awk '/2025-11-20T14:00:00/,/2025-11-20T15:00:00/' /var/log/vmkernel.log
-
-# Extract specific fields
-awk '{print $1, $2, $5}' /var/log/vmkernel.log
-
-# Count error types
-grep error /var/log/vmkernel.log | sort | uniq -c | sort -nr
-
-# Filter logs by severity
-sed -n '/error\|critical/Ip' /var/log/hostd.log
-
-**Using vim-cmd for VM Information:**
-
-# List all VMs and their IDs
-vim-cmd vmsvc/getallvms
-
-# Get VM power state
-vim-cmd vmsvc/power.getstate <VMID>
-
-# Get VM snapshot info
-vim-cmd vmsvc/snapshot.get <VMID>
-
-# Get VM detailed information
-vim-cmd vmsvc/get.summary <VMID>
-
-# Reload VM configuration
-vim-cmd vmsvc/reload <VMID>
-
-### 2.2 PowerCLI Log Collection Commands
-
-# Connect to vCenter
-Connect-VIServer -Server vcenter.domain.com
-
-# Get ESXi host logs
-Get-VMHost esxi01.domain.com | Get-Log
-
-# Get specific log file
-Get-VMHost esxi01.domain.com | Get-Log -Key vmkernel
-
-# Export logs to file
-Get-VMHost esxi01.domain.com | Get-Log -Key hostd | 
-    Select -ExpandProperty Entries | Out-File hostd.txt
-
-# Get logs from all hosts in cluster
-Get-Cluster "Production" | Get-VMHost | Get-Log -Key vpxa
-
-# Get VM logs
-Get-VM "TestVM" | Get-Log
-
-# Filter log entries
-Get-VMHost esxi01.domain.com | Get-Log -Key vmkernel | 
-    Select -ExpandProperty Entries | Where {$_ -match "error"}
-
-### 2.3 ESXi Command-Line Log Analysis
-
-**Using esxcli:**
-
-# View system logs
-esxcli system syslog config get
-
-# Configure remote syslog
-esxcli system syslog config set --loghost='syslog.domain.com:514'
-
-# View log marks
-esxcli system syslog mark
-
-# System log statistics
-esxcli system log stats get
-
-**Using localcli:**
-
-# Similar to esxcli but for local host only
-localcli system syslog config get
-
-### 2.4 Log Bundle Collection
-
-**vCenter Support Bundle:**
-
-# From VCSA Shell
-vc-support -w /tmp/
-
-# From vCenter GUI: Administration > System > Support Bundle
-
-**ESXi Support Bundle:**
-
-# Generate support bundle
-vm-support
-
-# Generate with specific parameters
-vm-support -x -d 1440 -w /tmp/
-
-# From vSphere Client: Host > Monitor > Logs > Generate Support Bundle
+| Log File | Purpose | What to Check |
+|----------|---------|---------------|
+| vpxd.log | vCenter core operations | Database errors, task failures, host connectivity |
+| vws.log | vSphere Client activities | Web client errors, login failures |
+| eam.log | ESX Agent Manager | Agent deployment failures |
 
 ---
 
-## 3. Snapshot Troubleshooting
+## Scenario 1: VM Snapshot Issues
 
-### 3.1 Understanding Snapshot Chain
+### Symptoms
+- VM performance degraded
+- "Virtual machine snapshot consolidation needed" warning
+- Unable to delete snapshots
+- Snapshot commit failures
 
-VMware snapshots create a delta disk hierarchy:
+### Sample Log Excerpts
 
-\begin{itemize}
-\item Base VMDK: Original virtual disk
-\item Delta disks: *-000001.vmdk, *-000002.vmdk (snapshot changes)
-\item .vmsd file: Snapshot metadata database
-\item .vmsn file: Snapshot memory state
-\end{itemize}
+**From `/var/log/hostd.log`:**
+```
+2025-11-20T15:12:34.567Z info hostd[123456] [Originator@6876 sub=Vimsvc.ha-eventmgr] Event 2345 : Snapshot consolidation required for VM TestVM-01
+2025-11-20T15:13:20.123Z error hostd[123456] [Originator@6876 sub=Snapsvc] Failed to commit snapshot for VM moref=vm-101: Timeout waiting for operation
+```
 
-### 3.2 Common Snapshot Issues
+**From `/var/log/vmkernel.log`:**
+```
+2025-11-20T15:13:20.456Z cpu12:2097234)WARNING: Snapsvc: 1234: Snapshot removal failed due to I/O timeout on datastore ds-prod-01
+2025-11-20T15:13:21.789Z cpu12:2097234)ScsiDeviceIO: 2345: Command 0x28 to device "naa.600605b00..." failed H:0x0 D:0x2 P:0x0 Possible sense data: 0x0 0x0 0x0
+```
 
-\begin{table}
-\begin{tabular}{|p{5cm}|p{9cm}|}
-\hline
-\textbf{Issue} & \textbf{Symptoms} \\
-\hline
-Snapshot consolidation needed & Warning alarm, snapshot delta disks not committed \\
-\hline
-Unable to delete snapshot & Snapshot deletion fails with timeout or I/O error \\
-\hline
-Invalid snapshot configuration & Broken snapshot chain, missing descriptor files \\
-\hline
-Snapshot disk space issues & Datastore full, snapshots consuming excessive space \\
-\hline
-Performance degradation & Slow VM performance due to deep snapshot chains \\
-\hline
-\end{tabular}
-\caption{Common Snapshot Problems}
-\end{table}
+**From VM log `/vmfs/volumes/datastore1/TestVM-01/vmware.log`:**
+```
+2025-11-20T15:12:30.123Z vcpu-0| Checkpoint_Unstun: vm stopped for 12345678 us
+2025-11-20T15:13:15.456Z vcpu-0| SNAPSHOT: SnapshotVMXTakeSnapshotWork: Failed to create snapshot: The file is too big (19)
+```
 
-### 3.3 Snapshot Troubleshooting Commands
+### Troubleshooting Steps
 
-**Check Snapshot Status:**
+**Step 1: Identify Snapshot Chain**
+```bash
+# List all VMs and find VMID
+vim-cmd vmsvc/getallvms | grep "TestVM-01"
 
-# List VM snapshots
+# Check snapshot status
 vim-cmd vmsvc/get.snapshot <VMID>
+```
 
-# Get all VMs
-vim-cmd vmsvc/getallvms
+**Step 2: Check Snapshot Files**
+```bash
+# Navigate to VM directory
+cd /vmfs/volumes/<datastore>/TestVM-01/
 
-# Check for orphaned snapshots
-find /vmfs/volumes -name "*-delta.vmdk" -o -name "*-[0-9][0-9][0-9][0-9][0-9][0-9].vmdk"
+# List all snapshot files
+ls -lh *-0000*.vmdk *delta.vmdk *.vmsd *.vmsn
 
-# List snapshot files for specific VM
-ls -lh /vmfs/volumes/<datastore>/<VM_name>/*-0000*.vmdk
+# Check snapshot sizes
+du -sh *-0000*.vmdk
+```
 
-# Check snapshot size
-du -sh /vmfs/volumes/<datastore>/<VM_name>/*.vmdk
+**Sample Output:**
+```
+-rw-------  1 root root  45G Nov 20 15:00 TestVM-01-000001.vmdk
+-rw-------  1 root root  23G Nov 20 15:10 TestVM-01-000002.vmdk
+-rw-------  1 root root 520 Nov 20 15:00 TestVM-01-000001-delta.vmdk
+```
 
-**Delete Snapshots:**
+**Step 3: Check Datastore Space**
+```bash
+# Check datastore capacity
+df -h | grep datastore1
 
-# Remove all snapshots via CLI
+# Detailed VMFS info
+vmkfstools -P /vmfs/volumes/datastore1/
+```
+
+**Step 4: Analyze Logs for Errors**
+```bash
+# Check for snapshot-related errors
+grep -i "snapshot" /var/log/hostd.log | tail -50
+grep -i "snapshot" /var/log/vmkernel.log | tail -50
+
+# Look for I/O errors
+grep -i -E "I/O error|timeout|fail" /var/log/vmkernel.log | grep -i snapshot
+```
+
+**Step 5: Verify Snapshot Chain Integrity**
+```bash
+# Check parent-child relationship in VMDK descriptors
+cat TestVM-01.vmdk | grep -i parent
+cat TestVM-01-000001.vmdk | grep -i parent
+cat TestVM-01-000002.vmdk | grep -i parent
+
+# Verify CID (Content ID) chain
+cat TestVM-01.vmdk | grep CID
+cat TestVM-01-000001.vmdk | grep CID
+```
+
+**Expected Output (Healthy Chain):**
+```
+# Base disk
+CID=abc12345
+parentCID=ffffffff
+
+# First snapshot
+CID=def67890
+parentCID=abc12345
+
+# Second snapshot
+CID=ghi11223
+parentCID=def67890
+```
+
+**Step 6: Remove Snapshots**
+
+**Option A: Via vSphere Client** (Recommended)
+1. Right-click VM → Snapshots → Consolidate
+2. Monitor task progress in Recent Tasks
+
+**Option B: Via Command Line**
+```bash
+# Remove all snapshots
 vim-cmd vmsvc/snapshot.removeall <VMID>
 
 # Remove specific snapshot
 vim-cmd vmsvc/snapshot.remove <VMID> <snapshot_id>
+```
 
-**Manual Consolidation:**
-
+**Step 7: Manual Consolidation (If Automatic Fails)**
+```bash
 # Power off VM
 vim-cmd vmsvc/power.off <VMID>
 
-# Navigate to VM directory
-cd /vmfs/volumes/<datastore>/<VM_name>/
+# Clone the last delta disk to consolidated disk
+vmkfstools -i TestVM-01-000002.vmdk TestVM-01-consolidated.vmdk
 
-# Check vmdk chain
-cat VM_NAME.vmdk | grep -i parent
+# Edit VMX file to point to consolidated disk
+vi TestVM-01.vmx
+# Change: scsi0:0.fileName = "TestVM-01-000002.vmdk"
+# To:     scsi0:0.fileName = "TestVM-01-consolidated.vmdk"
 
-# Example output analysis
-# If VM.vmdk points to VM-000001.vmdk
-# And VM-000001.vmdk points to VM-000002.vmdk
-# This indicates snapshot chain
-
-# Clone VMDK (consolidate manually)
-vmkfstools -i VM-000002.vmdk VM-consolidated.vmdk
-
-# Update VMX to point to new disk
-vi VM_NAME.vmx
-# Change scsi0:0.fileName = "VM-000002.vmdk"
-# To: scsi0:0.fileName = "VM-consolidated.vmdk"
-
-# Reload VM
+# Reload VM configuration
 vim-cmd vmsvc/reload <VMID>
 
-### 3.4 Snapshot Descriptor File Issues
+# Power on VM
+vim-cmd vmsvc/power.on <VMID>
 
-**Fix Broken .vmsd File:**
+# Clean up old snapshot files after verification
+rm -f *-0000*.vmdk *-delta.vmdk *.vmsd
+```
 
-# Navigate to VM directory
-cd /vmfs/volumes/<datastore>/<VM_name>/
+### Related KB Articles
+- **KB 316392**: Troubleshooting issues when creating or committing snapshots
+- **KB 1015180**: Understanding virtual machine snapshots in VMware ESX
+- **KB 1025279**: Best practices for virtual machine snapshots
+- **KB 1038963**: Troubleshooting snapshot consolidation issues
 
-# Backup current vmsd file
-cp VM_NAME.vmsd VM_NAME.vmsd.backup
-
-# Remove vmsd file
-rm VM_NAME.vmsd
-
-# Reload VM (creates new vmsd)
-vim-cmd vmsvc/reload <VMID>
-
-# Attempt snapshot deletion
-vim-cmd vmsvc/snapshot.removeall <VMID>
-
-**Analyze Snapshot Metadata:**
-
-# View vmsd content
-cat VM_NAME.vmsd
-
-# Check for CID (Content ID) mismatch
-cat VM_NAME.vmdk | grep CID
-cat VM_NAME-000001.vmdk | grep CID
-
-# CID values should form parent-child relationship
-# parentCID in child should match CID in parent
-
-### 3.5 Snapshot Log Analysis
-
-**Key Log Files for Snapshots:**
-
-# Check vmkernel.log for snapshot operations
-grep -i snapshot /var/log/vmkernel.log
-
-# Check hostd.log for snapshot API calls
-grep -i snapshot /var/log/hostd.log | tail -100
-
-# VM-specific snapshot logs
-grep -i snapshot /vmfs/volumes/<datastore>/<VM_name>/vmware.log
-
-# Common error patterns to search
-grep -E "snapshot.*fail|snapshot.*error|consolidate.*fail" /var/log/hostd.log
-
-**Interpreting Snapshot Errors:**
-
-\begin{table}
-\begin{tabular}{|p{6cm}|p{8cm}|}
-\hline
-\textbf{Error Message} & \textbf{Resolution} \\
-\hline
-"detected an invalid snapshot configuration" & Corrupt vmsd file - remove and reload VM \\
-\hline
-"not enough space on the file system" & Free up datastore space or expand datastore \\
-\hline
-"unable to access file" & Check permissions, locks, or APD/PDL conditions \\
-\hline
-"snapshot disk consolidation failed" & Manual consolidation or clone VM \\
-\hline
-"timeout waiting for snapshot operation" & Long-running I/O or storage latency issues \\
-\hline
-\end{tabular}
-\caption{Snapshot Error Messages}
-\end{table}
-
-### 3.6 Best Practices for Snapshot Management
-
-\begin{itemize}
-\item Limit snapshot chain depth to maximum 3-4 snapshots
-\item Do not keep snapshots for more than 72 hours
-\item Monitor snapshot size - alert when exceeds 25\% of base disk
-\item Always consolidate snapshots after backup operations
-\item Avoid snapshots on VMs with high transaction databases
-\item Power off VM if manual consolidation required
-\item Create snapshot alarms in vCenter (Configuration $\rightarrow$ Alarm Definitions)
-\end{itemize}
+### Prevention Best Practices
+- Limit snapshot chain depth to 3-4 snapshots maximum
+- Do not keep snapshots for more than 72 hours
+- Monitor snapshot size - alert when exceeds 25% of base disk
+- Always consolidate snapshots after backup operations
+- Create vCenter alarms for snapshot age and size
 
 ---
 
-## 4. vSphere HA (High Availability) Troubleshooting
+## Scenario 2: ESXi Host Not Responding/Disconnected
 
-### 4.1 HA Architecture Overview
+### Symptoms
+- Host shown as "Not Responding" or "Disconnected" in vCenter
+- Unable to manage VMs on host
+- VMs still running but not manageable from vCenter
+- Timeout errors when connecting to host
 
-**Master/Slave Model:**
+### Sample Log Excerpts
 
-\begin{itemize}
-\item \textbf{Master Host:} Elected via UDP communication, monitors slave hosts and VMs
-\item \textbf{Slave Hosts:} Send heartbeats to master, can become master if needed
-\item \textbf{FDM Agent:} Fault Domain Manager runs on each host
-\item \textbf{Heartbeat Mechanisms:}
-  \begin{itemize}
-  \item Network Heartbeat: Management network between master and slaves
-  \item Datastore Heartbeat: VMFS datastores for isolation detection
-  \end{itemize}
-\end{itemize}
+**From vCenter `/var/log/vmware/vpxd/vpxd.log`:**
+```
+2025-11-20T16:45:10.123Z info vpxd[45678] [Originator@6876 sub=vpxdMoHost opID=HB-host-123] [HostMo] host connection state changed to [DISCONNECTED] for host-123
+2025-11-20T16:46:12.456Z error vpxd[45678] [Originator@6876 sub=vpxdInvtHostCnx opID=HB-host-123@1234] [VpxdInvtHostSyncHostLRO] FixNotRespondingHost failed for host host-123, marking host as notResponding
+2025-11-20T16:46:13.789Z info vpxd[45678] [Originator@6876 sub=HostCnx opID=CheckforMissingHeartbeats] [VpxdHostCnx] No heartbeats received from host; time since last heartbeat: 67453ms
+2025-11-20T16:46:15.012Z info vpxd[45678] [Originator@6876 sub=HostCnx opID=CheckforMissingHeartbeats] Marking the connection alive to false: 528b7944-####-####-####-14cf56852fd2
+```
 
-### 4.2 HA Log Files
+**From ESXi `/var/log/hostd.log`:**
+```
+2025-11-20T16:45:05.123Z error hostd[67890] [Originator@6876 sub=Hostsvc.VMotionSystem] Lost connection to vCenter Server
+2025-11-20T16:45:06.456Z warning hostd[67890] [Originator@6876 sub=Vimsvc] Connection to vCenter terminated unexpectedly
+```
 
-**Primary HA Log:** `/var/log/fdm.log`
+**From ESXi `/var/log/vmkernel.log`:**
+```
+2025-11-20T16:44:58.789Z cpu5:67234)WARNING: Heartbeat: 1234: Lost network connection to vCenter Server at 192.168.1.10
+2025-11-20T16:45:10.123Z cpu5:67234)WARNING: Net: 2345: Network timeout detected on vmk0
+```
 
-# View HA logs
-tail -f /var/log/fdm.log
+### Troubleshooting Steps
 
-# Search for master election
-grep -i "election" /var/log/fdm.log
+**Step 1: Verify Basic Connectivity**
+```bash
+# From vCenter or management workstation
+ping esxi-host01.domain.com
+ping 192.168.1.20
 
-# Check HA state
-grep -i "state" /var/log/fdm.log | tail -50
+# Test SSH connectivity
+ssh root@esxi-host01.domain.com
 
-# Find master host
-grep -i "master" /var/log/fdm.log | tail -20
+# From ESXi host, test connectivity to vCenter
+ping vcenter.domain.com
+vmkping -I vmk0 vcenter.domain.com
+```
 
-# Check heartbeat issues
-grep -i "heartbeat" /var/log/fdm.log
+**Step 2: Check ESXi Management Agent Status**
+```bash
+# SSH to ESXi host
+ssh root@esxi-host01.domain.com
 
-**HA Configuration Files:**
+# Check hostd status
+/etc/init.d/hostd status
 
-# HA configuration directory
-ls -lh /etc/opt/vmware/fdm/
+# Check vpxa status (vCenter agent)
+/etc/init.d/vpxa status
 
-# FDM configuration
-cat /etc/opt/vmware/fdm/fdm.cfg
+# View processes
+ps -c | grep -E "hostd|vpxa"
+```
 
-# Cluster configuration
-ls /etc/vmware/hostd/config/fdm/
+**Sample Output (Problem):**
+```
+# /etc/init.d/hostd status
+hostd is not running
+```
 
-### 4.3 Common HA Issues
+**Step 3: Review ESXi Logs**
+```bash
+# Check for recent errors in hostd.log
+tail -100 /var/log/hostd.log | grep -i error
 
-\begin{table}
-\begin{tabular}{|p{5cm}|p{9cm}|}
-\hline
-\textbf{Issue} & \textbf{Description} \\
-\hline
-Master cannot be elected & Insufficient number of hosts, network partition \\
-\hline
-Host isolation detected & Network heartbeat lost but datastore heartbeat present \\
-\hline
-VM restart fails & Insufficient resources, admission control policy \\
-\hline
-HA configuration failed & DNS issues, firewall blocking, SSL certificate problems \\
-\hline
-False host failures & Network instability, heartbeat timeout misconfiguration \\
-\hline
-\end{tabular}
-\caption{Common HA Problems}
-\end{table}
+# Check vmkernel for network issues
+grep -i -E "network|timeout|disconnect" /var/log/vmkernel.log | tail -50
 
-### 4.4 HA Troubleshooting Commands
+# Check vpxa agent logs
+tail -100 /var/log/vpxa.log | grep -i error
+```
 
-**Check HA Status:**
+**Step 4: Check DNS Resolution**
+```bash
+# From ESXi host
+nslookup vcenter.domain.com
 
-# Verify HA agent is running
+# Check /etc/hosts file
+cat /etc/hosts
+
+# Verify DNS servers
+cat /etc/resolv.conf
+```
+
+**Step 5: Restart Management Agents**
+```bash
+# Restart hostd
+/etc/init.d/hostd restart
+
+# Restart vpxa (vCenter agent)
+/etc/init.d/vpxa restart
+
+# Or restart all services
+services.sh restart
+
+# Verify services are running
+/etc/init.d/hostd status
+/etc/init.d/vpxa status
+```
+
+**Expected Output (Healthy):**
+```
+# /etc/init.d/hostd restart
+watchdog-hostd: Terminating watchdog process with PID 67890
+hostd stopped.
+hostd started.
+
+# /etc/init.d/hostd status
+hostd is running
+```
+
+**Step 6: Check Network Configuration**
+```bash
+# List VMkernel interfaces
+esxcli network ip interface list
+
+# Check IP configuration
+esxcli network ip interface ipv4 get
+
+# Verify default gateway
+esxcli network ip route ipv4 list
+
+# Check firewall rules
+esxcli network firewall ruleset list | grep -i hostd
+```
+
+**Step 7: Verify SSL Certificates**
+```bash
+# Check certificate validity
+openssl x509 -in /etc/vmware/ssl/rui.crt -text -noout | grep -A2 Validity
+
+# Check certificate fingerprint
+openssl x509 -in /etc/vmware/ssl/rui.crt -fingerprint -sha1 -noout
+
+# Verify castore.pem integrity
+cat /etc/vmware/ssl/castore.pem
+```
+
+**Step 8: Reconnect Host from vCenter**
+
+**Via vSphere Client:**
+1. Navigate to host in inventory
+2. Right-click → Connection → Disconnect (if not already)
+3. Right-click → Connection → Connect
+4. Monitor Recent Tasks for connection status
+
+**Via PowerCLI:**
+```powershell
+# Connect to vCenter
+Connect-VIServer -Server vcenter.domain.com
+
+# Disconnect host
+Get-VMHost -Name "esxi-host01.domain.com" | Disconnect-VMHost -Confirm:$false
+
+# Reconnect host
+Get-VMHost -Name "esxi-host01.domain.com" | Connect-VMHost
+```
+
+**Step 9: Check for Resource Exhaustion**
+```bash
+# Check memory usage
+esxcli system stats memory get
+
+# Check hostd heap usage
+cat /var/log/hostd.log | grep -i "out of memory"
+
+# Verify sufficient storage space
+df -h
+vdf -h
+```
+
+### Related KB Articles
+- **KB 344682**: Troubleshooting an ESXi host in a "not responding" or "disconnected" state
+- **KB 318647**: ESXi host disconnects intermittently from vCenter Server
+- **KB 303652**: Changing an ESXi host's connection status in vCenter Server
+- **KB 404722**: ESXi host gets disconnected from vCenter server at random times
+- **KB 367381**: ESXi Host Disconnected from vCenter and hostd Fails to Start
+
+### Key Points to Remember
+- Distinguish between "Not Responding" and "Disconnected" states
+- "Not Responding" = vCenter cannot communicate with host but host is operational
+- "Disconnected" = Intentional disconnect or severe communication failure
+- Check UDP port 902 (heartbeat) and TCP port 443 (management) connectivity
+- Review network firewalls and security appliances
+
+---
+
+## Scenario 3: vSphere HA Failures
+
+### Symptoms
+- VMs not restarting after host failure
+- HA cluster shows "Configuration Issues"
+- "HA agent cannot be installed or configured" error
+- False host isolation alarms
+- Master election failures
+
+### Sample Log Excerpts
+
+**From ESXi `/var/log/fdm.log` (Master):**
+```
+2025-11-20T17:00:34.123Z [FDM] info  [LocalNode] Node changed to Master
+2025-11-20T17:01:05.456Z [FDM] warning [Election] Master election initiated due to host isolation detected
+2025-11-20T17:01:10.789Z [FDM] info [Heartbeat] Network heartbeat lost to host esxi-02.domain.com (192.168.1.21)
+2025-11-20T17:01:15.012Z [FDM] info [Heartbeat] Datastore heartbeat detected from host esxi-02.domain.com on ds:///vmfs/volumes/5a2b1234/
+```
+
+**From ESXi `/var/log/fdm.log` (Slave):**
+```
+2025-11-20T17:00:45.123Z [FDM] info [LocalNode] Master elected: 192.168.1.20 (esxi-01.domain.com)
+2025-11-20T17:01:05.456Z [FDM] warning [Heartbeat] Failed to send network heartbeat to master
+2025-11-20T17:01:10.789Z [FDM] error [Election] Cannot communicate with master, initiating election
+```
+
+**From vCenter `/var/log/vmware/vpxd/vpxd.log`:**
+```
+2025-11-20T17:02:01.123Z info vpxd[12345] [Originator@6876 sub=Default] [VpxdMoHost::UpdateDasState] VC state for host host-234 (initialized -> initialized), FDM state (Live -> FDMUnreachable), src of state (host-123 -> host-123)
+2025-11-20T17:02:10.456Z info vpxd[12345] [Originator@6876 sub=Default] [VpxdMoHost::UpdateDasState] VC state for host host-234 (initialized -> initialized), FDM state (FDMUnreachable -> Dead), src of state (host-123 -> host-123)
+2025-11-20T17:05:31.789Z info vpxd[12345] [Originator@6876 sub=Default] [VpxdMoHost::UpdateDasState] VC state for host host-234 (initialized -> initialized), FDM state (Dead -> Live), src of state (host-123 -> host-123)
+```
+
+**From `/var/run/log/fdm-installer.log` (Configuration Issues):**
+```
+2025-11-20T17:10:05.123Z fdm-installer: [24683] Result of esxcli software vib install -v=/tmp/vmware-root/ha-agentmgr/vpx-upgrade-installer/vmware-fdm.vib: [DependencyError]
+2025-11-20T17:10:06.456Z fdm-installer: VIB QLogic_bootbank_qlogic_hcli_2.2.60.7.0.0vmw.500.0.0.472560 violates extensibility rule checks
+```
+
+### Troubleshooting Steps
+
+**Step 1: Verify HA Configuration**
+```bash
+# Check FDM service status
 /etc/init.d/fdm status
 
-# Restart HA agent (if needed)
-/etc/init.d/fdm restart
-
-# Get cluster information
-vim-cmd hostsvc/hostsummary | grep cluster
-
-# Check HA runtime status
-esxcli system version get
-
-**FDM Status Commands:**
-
-# Check FDM service
-/etc/init.d/fdm status
-
-# FDM configuration
+# View FDM configuration
 cat /etc/opt/vmware/fdm/fdm.cfg
 
-# List protected VMs
+# Check protected VMs
 cat /etc/opt/vmware/fdm/protected_vms
+```
 
-**Network Heartbeat Validation:**
+**Step 2: Identify HA Master**
+```bash
+# From any host in cluster
+grep "is master" /var/log/fdm.log | tail -10
 
-# Test connectivity to master (from slave)
-vmkping -I vmk0 <master_IP>
+# Look for master election logs
+grep -i "election" /var/log/fdm.log | tail -20
+
+# Check current master
+grep "Master elected" /var/log/fdm.log | tail -5
+```
+
+**Sample Output:**
+```
+2025-11-20T17:00:34.123Z [FDM] info [LocalNode] Node changed to Master
+2025-11-20T17:00:35.456Z [FDM] info [ClusterConfig] Cluster configuration updated: master=192.168.1.20
+```
+
+**Step 3: Verify Network Heartbeat**
+```bash
+# From slave host, test connectivity to master
+vmkping -I vmk0 192.168.1.20
 
 # Check management network interface
 esxcli network ip interface list
 
-# Verify firewall rules
+# Verify HA firewall rules
 esxcli network firewall ruleset list | grep fdm
 
-# Enable HA firewall rule if disabled
+# Enable FDM firewall rule if disabled
 esxcli network firewall ruleset set -e true -r fdm
+```
 
-**Datastore Heartbeat Validation:**
+**Sample Output (Healthy):**
+```
+# vmkping -I vmk0 192.168.1.20
+PING 192.168.1.20 (192.168.1.20): 56 data bytes
+64 bytes from 192.168.1.20: icmp_seq=0 ttl=64 time=0.234 ms
+64 bytes from 192.168.1.20: icmp_seq=1 ttl=64 time=0.189 ms
+```
 
-# List heartbeat datastores
-ls -lh /vmfs/volumes/ | grep heartbeat
-
-# Check datastore accessibility
+**Step 4: Check Datastore Heartbeat**
+```bash
+# List datastores
 esxcli storage filesystem list
 
-# View storage paths
-esxcli storage core path list
+# Check for heartbeat datastores
+ls -lh /vmfs/volumes/ | grep heartbeat
 
-### 4.5 HA Master Election Process
+# Verify datastore accessibility
+esxcli storage core path list | grep -i active
 
-**Determine Current Master:**
+# Check for APD/PDL conditions
+grep -i -E "APD|PDL" /var/log/vmkernel.log | tail -20
+```
 
-# From any host in cluster, check fdm.log
-grep "is master" /var/log/fdm.log | tail -5
+**Step 5: Analyze Heartbeat Logs**
+```bash
+# Check for heartbeat failures
+grep -i "heartbeat" /var/log/fdm.log | tail -50
 
-# Master log entry will show
-# "LocalNode changed to Master"
+# Look for isolation events
+grep -i "isolation" /var/log/fdm.log | tail -30
 
-# From slaves, log shows
-# "Master elected: <Master_IP>"
+# Check for network partition
+grep -i "partition" /var/log/fdm.log | tail -20
+```
 
-**Force Master Election:**
+**Step 6: Review HA Admission Control**
+```bash
+# From vSphere Client:
+# Cluster → Configure → vSphere HA → Edit → Admission Control
 
-# Disable HA on cluster (from vCenter)
-# Re-enable HA on cluster
+# Via PowerCLI:
+Get-Cluster "Production" | Select HAEnabled, HAAdmissionControlEnabled, HAFailoverLevel
+```
 
-# Or restart FDM on all hosts
+**Step 7: Restart FDM Agent (If Needed)**
+```bash
+# Restart FDM service
 /etc/init.d/fdm restart
 
-**Configure Master Election Priority (Advanced):**
+# Verify FDM is running
+/etc/init.d/fdm status
 
-Edit `/etc/opt/vmware/fdm/fdm.cfg` and add:
+# Monitor fdm.log for errors
+tail -f /var/log/fdm.log
+```
 
-masterElectionPriority=<number>
+**Step 8: Reconfigure HA (If Persistent Issues)**
 
-Higher number = higher priority. Restart FDM after change.
+**Via vSphere Client:**
+1. Navigate to Cluster → Configure → vSphere HA
+2. Click Edit → Turn OFF vSphere HA
+3. Wait for task to complete
+4. Turn ON vSphere HA
+5. Monitor fdm.log on hosts during reconfiguration
 
-### 4.6 HA Log Analysis Examples
+**Via PowerCLI:**
+```powershell
+# Disable HA
+Set-Cluster -Cluster "Production" -HAEnabled $false -Confirm:$false
 
-**Successful HA Protection:**
+# Wait 30 seconds
+Start-Sleep -Seconds 30
 
-# Look for these patterns in fdm.log
-grep "Protecting" /var/log/fdm.log
+# Enable HA
+Set-Cluster -Cluster "Production" -HAEnabled $true -Confirm:$false
+```
 
-# Example log entries:
-# "Protecting VM <VM_NAME>"
-# "HA protection enabled for VM"
-# "VM successfully failed over to host"
+**Step 9: Configure Advanced HA Settings**
+```bash
+# Set custom isolation addresses
+# Via vSphere Client: Cluster → Configure → vSphere HA → Edit → Advanced Options
+# Add:
+das.isolationaddress0 = 192.168.1.1
+das.isolationaddress1 = 8.8.8.8
 
-**Host Isolation Response:**
+# Adjust heartbeat datastores
+das.heartbeatDsPerHost = 2
 
-# Check isolation events
-grep -i "isolation" /var/log/fdm.log
+# Modify failure detection time (milliseconds)
+das.failuredetectiontime = 15000
+```
 
-# Typical log sequence:
-# "Network isolation detected"
-# "Datastore heartbeat present - not isolated"
-# Or "No datastore heartbeat - host isolated"
+### Related KB Articles
+- **KB 318936**: Troubleshooting VMware High Availability (HA) issues
+- **KB 324992**: Determining if your VMware vSphere HA cluster has experienced a host failure
+- **KB 413777**: VMware vSphere HA cluster has experienced a host failure
+- **KB 318929**: vSphere HA agent cannot be correctly installed or configured
+- **KB 315379**: vSphere HA reports that an agent is in the Agent Unreachable state
+- **KB 372329**: vSphere HA clusters fails to configure in vCenter Server 8.0 U3
 
-**VM Restart Attempts:**
-
-# Search for restart operations
-grep -i "restart" /var/log/fdm.log | grep VM_NAME
-
-# Log patterns:
-# "Attempting to restart VM"
-# "VM restart successful on host"
-# "VM restart failed - insufficient resources"
-
-### 4.7 HA Advanced Configuration Parameters
-
-\begin{table}
-\begin{tabular}{|p{5cm}|p{9cm}|}
-\hline
-\textbf{Parameter} & \textbf{Description} \\
-\hline
-das.isolationaddress[0-9] & IP addresses for isolation validation \\
-\hline
-das.usedefaultisolationaddress & Use default gateway for isolation check (true/false) \\
-\hline
-das.heartbeatDsPerHost & Number of datastore heartbeats per host (default: 2) \\
-\hline
-das.failuredetectiontime & Time in ms before declaring host failed (default: 15000) \\
-\hline
-das.config.fdm.reportfailoverfailed & Report VM failover failures (true/false) \\
-\hline
-\end{tabular}
-\caption{HA Advanced Configuration}
-\end{table}
-
-**Configure Advanced Settings:**
-
-From vSphere Client:
-1. Cluster $\rightarrow$ Configure $\rightarrow$ vSphere HA $\rightarrow$ Edit
-2. Advanced Options section
-3. Add key-value pairs
+### Key Monitoring Points
+- FDM state transitions: Live → FDMUnreachable → Dead
+- Network heartbeat on management network (UDP)
+- Datastore heartbeat on shared VMFS (file-based)
+- Master election process and priority
+- Isolation address response
 
 ---
 
-## 5. DRS (Distributed Resource Scheduler) Troubleshooting
+## Scenario 4: DRS Not Working
 
-### 5.1 DRS Overview
+### Symptoms
+- DRS not generating recommendations
+- VMs not automatically migrating
+- Cluster imbalance despite DRS enabled
+- "DRS functionality was impacted" warnings
+- vCLS VMs unavailable
 
-**DRS Functions:**
+### Sample Log Excerpts
 
-\begin{itemize}
-\item Initial VM placement when powered on
-\item Load balancing through vMotion
-\item Resource pool enforcement
-\item Affinity and anti-affinity rules
-\item VM-Host affinity rules
-\end{itemize}
+**From vCenter `/var/log/vmware/vpxd/vpxd.log`:**
+```
+2025-11-20T17:15:45.123Z warning vpxd[23456] [Originator@6876 sub=DRS] Failed to apply DRS recommendation: Insufficient resources on target host
+2025-11-20T17:16:12.456Z error vpxd[23456] [Originator@6876 sub=DRS] VM vm-202 placement constraint violated due to affinity rule
+2025-11-20T17:17:30.789Z info vpxd[23456] [Originator@6876 sub=ClusterComputeResource] ClusterComputeResource::InvokeDrs: DRS invoked for cluster domain-c123
+2025-11-20T17:17:31.012Z info vpxd[23456] [Originator@6876 sub=DRS] DRS generated 0 recommendations for cluster Production
+```
 
-**DRS Automation Levels:**
+**From vCenter `/var/log/vmware/vpxd/vpxd-profiler.log`:**
+```
+2025-11-20T17:17:30.123Z [DRSProfiler] Cluster Production: CPU utilization: Host1=85%, Host2=45%, Host3=42%
+2025-11-20T17:17:30.456Z [DRSProfiler] Migration threshold: 3 (Conservative)
+2025-11-20T17:17:30.789Z [DRSProfiler] Imbalance score: 12 (below threshold for migration)
+```
 
-\begin{enumerate}
-\item Manual: Recommendations only
-\item Partially Automated: Auto placement, manual migration
-\item Fully Automated: Auto placement and migration
-\end{enumerate}
+**From ESXi `/var/log/vpxa.log`:**
+```
+2025-11-20T17:18:00.123Z info vpxa[34567] [Originator@6876 sub=vpxaInvtVm] DRS requested migration of VM TestVM-03 to host esxi-02.domain.com
+2025-11-20T17:18:01.456Z error vpxa[34567] [Originator@6876 sub=VMotionUtil] vMotion prerequisites not met: EVC mode mismatch
+```
 
-### 5.2 DRS Log Files
+**vCLS VM Issues:**
+```
+2025-11-20T17:20:00.123Z warning vpxd[23456] [Originator@6876 sub=vCLS] vSphere DRS functionality was impacted due to unhealthy state vSphere Cluster Services
+2025-11-20T17:20:01.456Z error vpxd[23456] [Originator@6876 sub=vCLS] vCLS VM vCLS-1234 failed to power on: Insufficient resources
+```
 
-**Primary DRS Logs:**
+### Troubleshooting Steps
 
-# vCenter side (VCSA)
-/var/log/vmware/vpxd/vpxd.log    # Main vCenter log
-/var/log/vmware/vpxd/vpxd-profiler.log  # DRS performance
+**Step 1: Verify DRS Configuration**
 
-# ESXi side
-/var/log/hostd.log    # Host daemon includes DRS operations
-/var/log/vpxa.log     # vCenter agent on ESXi
+**Via vSphere Client:**
+1. Navigate to Cluster → Configure → vSphere DRS
+2. Verify DRS is Enabled
+3. Check Automation Level (Manual, Partially Automated, Fully Automated)
+4. Review Migration Threshold setting
 
-### 5.3 DRS Troubleshooting Commands
-
-**Check DRS Status via PowerCLI:**
-
+**Via PowerCLI:**
+```powershell
 # Connect to vCenter
-Connect-VIServer vcenter.domain.com
+Connect-VIServer -Server vcenter.domain.com
 
-# Get cluster DRS configuration
-Get-Cluster "Production" | Select Name, DrsEnabled, DrsAutomationLevel
+# Get DRS configuration
+Get-Cluster "Production" | Select Name, DrsEnabled, DrsAutomationLevel, DrsMode
 
-# Get DRS recommendations
+# Sample output:
+# Name       DrsEnabled DrsAutomationLevel DrsMode
+# ----       ---------- ------------------ -------
+# Production True       FullyAutomated     FullyAutomated
+```
+
+**Step 2: Check DRS Recommendations**
+```powershell
+# Get current DRS recommendations
 Get-Cluster "Production" | Get-DrsRecommendation
 
-# Apply DRS recommendations
+# View recommendation details
+Get-Cluster "Production" | Get-DrsRecommendation | Format-List *
+
+# Apply recommendations manually
 Get-Cluster "Production" | Get-DrsRecommendation | Apply-DrsRecommendation
+```
 
-# Get DRS rules
-Get-Cluster "Production" | Get-DrsRule
-
-# Check VM DRS settings
-Get-VM "TestVM" | Select Name, DrsAutomationLevel
-
-# Get DRS cluster group
-Get-Cluster "Production" | Get-DrsClusterGroup
-
-**Check DRS from vSphere Client:**
-
-1. Navigate to Cluster $\rightarrow$ Monitor $\rightarrow$ vSphere DRS
-2. Review DRS Faults and Recommendations tabs
-3. Check DRS History for past actions
-
-### 5.4 Common DRS Issues
-
-\begin{table}
-\begin{tabular}{|p{5cm}|p{9cm}|}
-\hline
-\textbf{Issue} & \textbf{Cause/Resolution} \\
-\hline
-DRS not generating recommendations & Cluster imbalance below threshold, check migration threshold setting \\
-\hline
-DRS recommendations not applied & Manual mode, VM automation level set to disabled \\
-\hline
-vMotion prerequisites not met & Networking, CPU compatibility, shared storage issues \\
-\hline
-Affinity rules violated & Conflicting rules, insufficient resources on target hosts \\
-\hline
-DRS showing cluster invalid & Host disconnected, EVC mode mismatch, configuration error \\
-\hline
-\end{tabular}
-\caption{Common DRS Problems}
-\end{table}
-
-### 5.5 DRS Log Analysis
-
-**Search for DRS Operations:**
-
-# From vCenter VCSA shell
-grep -i "drs" /var/log/vmware/vpxd/vpxd.log | tail -100
-
-# Look for DRS invocations
-grep "InvokeDrs" /var/log/vmware/vpxd/vpxd.log
-
-# Check for DRS errors
-grep -E "drs.*error|drs.*fail" /var/log/vmware/vpxd/vpxd.log
-
-# DRS recommendation generation
-grep "drs.*recommendation" /var/log/vmware/vpxd/vpxd.log
-
-# From ESXi host
-grep -i "relocate\|migrate" /var/log/vpxa.log
-
-**Analyze DRS Decisions:**
-
-# DRS invocation patterns in vpxd.log
-# "ClusterComputeResource::InvokeDrs"
-# "DRS generated N recommendations"
-# "Applying recommendation: migrate VM_NAME to host"
-
-# Check migration threshold
-grep "migration threshold" /var/log/vmware/vpxd/vpxd.log
-
-### 5.6 DRS Affinity Rules Troubleshooting
-
-**List and Verify Rules:**
-
+**Step 3: Review DRS Rules**
+```powershell
 # Get all DRS rules
-Get-Cluster "Production" | Get-DrsRule | 
-    Select Name, Type, Enabled, @{N="VMs";E={$_.VMIds}}
+Get-Cluster "Production" | Get-DrsRule
 
 # Check VM-to-VM affinity rules
 Get-Cluster "Production" | Get-DrsRule -Type VMAntiAffinity
@@ -766,285 +684,593 @@ Get-Cluster "Production" | Get-DrsRule -Type VMAntiAffinity
 # Check VM-to-Host affinity rules
 Get-Cluster "Production" | Get-DrsVMHostRule
 
-**Identify Rule Conflicts:**
+# View DRS cluster groups
+Get-Cluster "Production" | Get-DrsClusterGroup
+```
 
-# From vpxd.log, search for rule violations
-grep -i "rule.*violat\|constraint.*violat" /var/log/vmware/vpxd/vpxd.log
+**Step 4: Analyze vCenter Logs for DRS**
+```bash
+# SSH to vCenter and check DRS logs
+grep -i "drs" /var/log/vmware/vpxd/vpxd.log | tail -100
 
-# Example patterns:
+# Look for DRS invocations
+grep "InvokeDrs" /var/log/vmware/vpxd/vpxd.log | tail -50
+
+# Check for DRS errors
+grep -i -E "drs.*error|drs.*fail" /var/log/vmware/vpxd/vpxd.log | tail -50
+
+# Check DRS recommendation generation
+grep -i "recommendation" /var/log/vmware/vpxd/vpxd.log | grep -i drs | tail -30
+```
+
+**Step 5: Verify vMotion Prerequisites**
+```bash
+# From each ESXi host
+# Check vMotion VMkernel interface
+esxcli network ip interface list | grep -A5 vmk1
+
+# Verify vMotion is enabled
+esxcfg-vmknic -l | grep -i vmotion
+
+# Test vMotion connectivity between hosts
+vmkping -I vmk1 <other-host-vmotion-ip>
+
+# Verify EVC mode
+vim-cmd hostsvc/hostsummary | grep -i evc
+```
+
+**Step 6: Check Cluster Resource Balance**
+```powershell
+# Get cluster resource usage
+Get-Cluster "Production" | Get-VMHost | Select Name, 
+    @{N="CPU Usage %";E={[math]::Round($_.CpuUsageMhz/$_.CpuTotalMhz*100,2)}},
+    @{N="Memory Usage %";E={[math]::Round($_.MemoryUsageGB/$_.MemoryTotalGB*100,2)}}
+
+# Sample output:
+# Name             CPU Usage % Memory Usage %
+# ----             ----------- --------------
+# esxi-01.domain   85.23       72.45
+# esxi-02.domain   42.15       38.22
+# esxi-03.domain   45.67       41.89
+```
+
+**Step 7: Troubleshoot vCLS VMs**
+```bash
+# From vCenter, check vCLS VM status
+# vSphere Client: Cluster → Monitor → vSphere DRS → vCLS
+
+# Via PowerCLI
+Get-Cluster "Production" | Get-VM | Where {$_.Name -like "vCLS*"} | Select Name, PowerState
+
+# Check vCLS logs in vCenter
+grep -i "vcls" /var/log/vmware/vpxd/vpxd.log | tail -50
+```
+
+**If vCLS VMs are not powered on:**
+```powershell
+# Power on vCLS VMs
+Get-Cluster "Production" | Get-VM | Where {$_.Name -like "vCLS*" -and $_.PowerState -eq "PoweredOff"} | Start-VM
+
+# Verify sufficient cluster resources for vCLS VMs
+```
+
+**Step 8: Verify VM DRS Settings**
+```powershell
+# Check if specific VMs have DRS disabled
+Get-VM | Select Name, 
+    @{N="DRS Automation Level";E={(Get-VM $_ | Get-VMResourceConfiguration).DrsAutomationLevel}}
+
+# Re-enable DRS for specific VM
+Get-VM "TestVM-01" | Set-VMResourceConfiguration -DrsAutomationLevel AsSpecifiedByCluster
+```
+
+**Step 9: Check for Affinity Rule Conflicts**
+```bash
+# From vCenter logs
+grep -i "rule.*violat\|constraint.*violat" /var/log/vmware/vpxd/vpxd.log | tail -30
+
+# Common messages:
 # "Cannot satisfy VM-Host affinity rule"
 # "Anti-affinity rule prevents placement"
+# "Conflicting DRS rules detected"
+```
 
-### 5.7 DRS Advanced Configuration
-
-**DRS Settings to Check:**
-
-\begin{itemize}
-\item \textbf{Migration Threshold:} Conservative (5) to Aggressive (1)
-\item \textbf{Predictive DRS:} Uses vRealize Operations metrics
-\item \textbf{VM Distribution:} Even distribution setting
-\item \textbf{CPU Over-Commitment:} Ratio limit
-\item \textbf{Memory Over-Commitment:} Ratio limit
-\end{itemize}
-
-**Advanced DRS Options:**
-
-# Set DRS automation level
+**Step 10: Adjust DRS Settings**
+```powershell
+# Increase DRS aggressiveness (1=aggressive, 5=conservative)
 Set-Cluster -Cluster "Production" -DrsAutomationLevel FullyAutomated
+Set-Cluster -Cluster "Production" -DrsMode FullyAutomated -DrsAggressiveness 2
 
-# Set migration threshold
-Set-Cluster -Cluster "Production" -DrsMode FullyAutomated -DrsAggressiveness 3
+# Force DRS invocation (DRS runs every 5 minutes by default)
+# Wait for next DRS cycle or manually trigger by entering/exiting maintenance mode
+```
 
-# Disable DRS for specific VM
-Get-VM "DatabaseVM" | Set-VMResourceConfiguration -DrsAutomationLevel Disabled
+### Related KB Articles
+- **KB 344925**: "Unable to apply DRS resource settings on host" error
+- **KB 320016**: Distributed Resource Scheduler cluster reports DRS errors
+- **KB 378718**: DRS fails to load balance the VMs due to EVC mismatch
+- **KB 79892**: DRS Functionality Impacted by Unhealthy State of vCLS VMs
+- Virtualization Dojo: "6 Unmissable Things to Check When Troubleshooting DRS"
+
+### Common DRS Issues and Resolutions
+
+| Issue | Cause | Resolution |
+|-------|-------|------------|
+| No recommendations generated | Cluster already balanced or threshold too conservative | Lower migration threshold (increase aggressiveness) |
+| VMs not migrating | Manual automation level or VM-level DRS disabled | Set to Fully Automated |
+| vMotion prerequisites not met | Network, CPU, storage compatibility issues | Verify vMotion network, enable EVC, check storage access |
+| Affinity rule violations | Conflicting or impossible-to-satisfy rules | Review and modify DRS rules |
+| vCLS VMs unavailable | Insufficient cluster resources or power state issues | Power on vCLS VMs, ensure adequate resources |
 
 ---
 
-## 6. vMotion Troubleshooting
+## Scenario 5: vMotion Failures
 
-### 6.1 vMotion Prerequisites
+### Symptoms
+- vMotion task fails at specific percentages (10%, 14%, 20%, 88%)
+- "Timed out waiting for migration start request" errors
+- Network timeout during migration
+- CPU compatibility check failed
+- Storage vMotion failures
 
-**Requirements for Successful vMotion:**
+### Sample Log Excerpts
 
-\begin{itemize}
-\item Shared storage accessible to source and destination hosts
-\item Gigabit or faster network for vMotion
-\item Compatible CPU families or EVC enabled
-\item Same virtual switch names on source and destination
-\item vMotion enabled on VMkernel interfaces
-\item Proper licensing (vMotion feature)
-\item No incompatible devices (local ISO, physical RDM in physical mode)
-\end{itemize}
+**From ESXi source host `/var/log/hostd.log`:**
+```
+2025-11-20T17:30:00.123Z error hostd[45678] [Originator@6876 sub=Vmotion] vMotion timeout at 14%: Timeout waiting for migration start request
+2025-11-20T17:30:10.456Z error hostd[45678] [Originator@6876 sub=VMotionUtil] Failed to establish vMotion connection to destination host
+2025-11-20T17:30:15.789Z error hostd[45678] [Originator@6876 sub=Migrate] Migration failed: The vMotion failed because the destination host did not receive data from the source host
+```
 
-### 6.2 vMotion Log Files
+**From ESXi source host `/var/log/vmkernel.log`:**
+```
+2025-11-20T17:30:00.456Z cpu8:67234)WARNING: Migrate: vm 12345: 1234: Migration timeout at phase 2 (20%)
+2025-11-20T17:30:05.789Z cpu8:67234)WARNING: NetVMotion: 2345: Network unreachable during migration: vmk1 -> 192.168.10.21
+2025-11-20T17:30:10.012Z cpu8:67234)ERROR: Storage: vm 12345: 3456: Disk access error during migration: naa.600605b00...
+```
 
-**Key Log Locations:**
+**From ESXi destination host `/var/log/hostd.log`:**
+```
+2025-11-20T17:30:02.123Z info hostd[56789] [Originator@6876 sub=Vmotion] Received vMotion request for VM TestVM-05 from source host 192.168.10.20
+2025-11-20T17:30:08.456Z error hostd[56789] [Originator@6876 sub=VMotionUtil] Failed to receive migration: Network connection timeout
+2025-11-20T17:30:09.789Z warning hostd[56789] [Originator@6876 sub=Hostd.MigrateSupport] Cleaning up failed vMotion attempt
+```
 
-# ESXi Source Host
-/var/log/hostd.log          # Main host daemon log
-/var/log/vmkernel.log       # VMkernel operations
-/var/log/vpxa.log           # vCenter agent
+**From vCenter `/var/log/vmware/vpxd/vpxd.log`:**
+```
+2025-11-20T17:30:00.123Z info vpxd[23456] [Originator@6876 sub=vpxLro opID=abc123-456] BEGIN relocate vm-234 from host-123 to host-456
+2025-11-20T17:30:15.456Z error vpxd[23456] [Originator@6876 sub=vpxLro opID=abc123-456] Task failed: A general system error occurred: Failed waiting for data
+2025-11-20T17:30:16.789Z info vpxd[23456] [Originator@6876 sub=vpxLro opID=abc123-456] END relocate FAIL
+```
 
-# ESXi Destination Host
-/var/log/hostd.log
-/var/log/vmkernel.log
+**From VM log `/vmfs/volumes/datastore1/TestVM-05/vmware.log`:**
+```
+2025-11-20T17:30:00.123Z vcpu-0| Migrate: Starting migration from esxi-01.domain.com to esxi-02.domain.com
+2025-11-20T17:30:05.456Z vcpu-0| MigrateCheckpoint: State save started
+2025-11-20T17:30:10.789Z vcpu-0| Migrate: Migration failed: Network timeout during pre-copy phase
+```
 
-# VM-specific log
-/vmfs/volumes/<datastore>/<VM>/vmware.log
+### Troubleshooting Steps Based on Failure Percentage
 
-# vCenter Server (VCSA)
-/var/log/vmware/vpxd/vpxd.log
+#### vMotion Failure at 10% or 14%
 
-### 6.3 Common vMotion Failures
+**Indicates:** Network connectivity or authentication issues between hosts
 
-\begin{table}
-\begin{tabular}{|p{5cm}|p{9cm}|}
-\hline
-\textbf{Error} & \textbf{Cause/Resolution} \\
-\hline
-Timeout at 10\% or 14\% & Network connectivity issues, MTU mismatch, firewall blocking \\
-\hline
-Timeout at 20\% & Memory pre-copy phase timeout, high memory change rate \\
-\hline
-Timeout at 88\% & Final switchover timeout, storage latency \\
-\hline
-"Failed to receive migration" & Network configuration mismatch, VHV enable/disable mismatch \\
-\hline
-CPU compatibility check failed & EVC not enabled or incompatible CPU features \\
-\hline
-Network adapter error & Virtual switch or port group name mismatch \\
-\hline
-\end{tabular}
-\caption{Common vMotion Errors}
-\end{table}
-
-### 6.4 vMotion Troubleshooting Commands
-
-**Validate vMotion Configuration:**
-
-# Check vMotion VMkernel interface
+**Step 1: Verify vMotion Network Configuration**
+```bash
+# From both source and destination ESXi hosts
 esxcli network ip interface list
 
-# Verify vMotion enabled on interface
+# Check vMotion VMkernel interface
 esxcfg-vmknic -l | grep -i vmotion
 
-# Test vMotion network connectivity
-vmkping -I vmk1 <destination_host_vmotion_ip>
+# Sample output:
+# vmk1   1500  192.168.10.20  255.255.255.0  00:50:56:6b:12:34  STATIC  vMotion  true
+```
+
+**Step 2: Test vMotion Network Connectivity**
+```bash
+# From source host to destination vMotion IP
+vmkping -I vmk1 192.168.10.21
 
 # Test with large packets (MTU validation)
-vmkping -s 8972 -d -I vmk1 <destination_host_vmotion_ip>
+vmkping -s 8972 -d -I vmk1 192.168.10.21
 
-# Check virtual switch configuration
-esxcfg-vswitch -l
+# Expected output for successful jumbo frame test:
+# PING 192.168.10.21 (192.168.10.21): 8972 data bytes
+# 8980 bytes from 192.168.10.21: icmp_seq=0 ttl=64 time=0.567 ms
+```
 
-# Verify firewall rules
+**Step 3: Verify Firewall Rules**
+```bash
+# Check vMotion firewall rule
 esxcli network firewall ruleset list | grep -i vmotion
+
+# Enable vMotion firewall if disabled
 esxcli network firewall ruleset set -e true -r vMotion
 
-**CPU Compatibility Check:**
+# Verify allowed IPs (should show "All" for trust network)
+esxcli network firewall ruleset allowedip list | grep -A5 vMotion
+```
 
-# Check EVC mode
-vim-cmd hostsvc/hostsummary | grep -i evc
+**Step 4: Check Network Configuration Consistency**
+```bash
+# Verify virtual switch configuration
+esxcfg-vswitch -l
 
-# View CPU features
-grep -i vmx /proc/cpuinfo
+# Check port group configuration
+esxcli network vswitch standard portgroup list
 
-# From vCenter PowerCLI
-Get-Cluster | Select Name, EVCMode
+# Verify MTU settings on vSwitch
+esxcli network vswitch standard list | grep -A10 vSwitch1
+```
 
-**Storage Validation:**
+**Step 5: Test SSH Connectivity**
+```bash
+# From source host, test SSH to destination
+ssh root@esxi-02.domain.com
 
-# List datastores
+# If SSH fails, vMotion will also fail at 10%
+```
+
+#### vMotion Failure at 20%
+
+**Indicates:** Memory pre-copy phase timeout, high memory change rate
+
+**Step 1: Check VM Memory Activity**
+```bash
+# Monitor VM memory change rate during migration
+esxtop
+# Press 'm' for memory view
+# Look for VM and check 'MCTL?' and 'MCTLSZ' columns
+```
+
+**Step 2: Review vmkernel Logs**
+```bash
+# Check for memory-related migration errors
+grep -i "memory.*dirty\|precopy" /var/log/vmkernel.log | tail -30
+
+# Look for high memory change rate messages
+grep -i "migrate.*memory" /var/log/vmkernel.log | tail -20
+```
+
+**Step 3: Reduce VM Memory Pressure**
+- Close unnecessary applications in VM
+- Consider cold migration (power off, then migrate)
+- Increase vMotion timeout settings (advanced)
+
+**Step 4: Check for Memory Overcommitment**
+```bash
+# Check host memory state
+esxtop
+# Press 'm' for memory view
+# Check 'PMEM' (physical memory) usage across all VMs
+```
+
+#### vMotion Failure at 88%
+
+**Indicates:** Final switchover/cutover timeout, storage latency
+
+**Step 1: Check Storage Performance**
+```bash
+# Monitor storage latency
+esxtop
+# Press 'd' for disk view
+# Check 'DAVG/cmd' (device average latency)
+# Values >20ms indicate potential issues
+
+# Check for storage path issues
+esxcli storage core path list | grep -i "State:active"
+```
+
+**Step 2: Review Storage-Related Errors**
+```bash
+# Check vmkernel for storage errors
+grep -i -E "storage.*fail|disk.*error|timeout" /var/log/vmkernel.log | tail -50
+
+# Look for APD/PDL conditions
+grep -i -E "APD|PDL" /var/log/vmkernel.log | tail -20
+```
+
+**Step 3: Verify Shared Storage Access**
+```bash
+# Ensure both hosts can access the same datastores
 esxcli storage filesystem list
 
-# Check datastore accessibility
-esxcli storage core path list
+# Check multipathing status
+esxcli storage core path list | grep -E "naa\.|vmhba"
 
-# Verify VMFS mount
-df -h | grep vmfs
+# Verify no VMFS locks
+vmkfstools -D /vmfs/volumes/<datastore>/TestVM-05/TestVM-05.vmdk
+```
 
-### 6.5 vMotion Log Analysis
+#### General vMotion Troubleshooting Steps
 
-**Search for vMotion Operations:**
+**Step 1: Verify CPU Compatibility**
+```bash
+# Check EVC mode on cluster
+vim-cmd hostsvc/hostsummary | grep -i evc
 
-# From source ESXi host
-grep -i "vmotion\|relocate\|migrate" /var/log/hostd.log | tail -100
+# From vCenter PowerCLI
+Get-Cluster "Production" | Select Name, EVCMode
 
-# Look for specific VM migration
-grep "VM_NAME" /var/log/hostd.log | grep -i migrate
+# Check CPU features
+grep -i vmx /proc/cpuinfo
 
-# Check vmkernel logs
-grep -i "migrate" /var/log/vmkernel.log | tail -50
+# Verify CPU vendor and model consistency
+esxcli hardware cpu list | grep -E "Id:|Brand:"
+```
 
-# VM-specific vMotion logs
-grep -i "vmotion\|migrate" /vmfs/volumes/<datastore>/<VM>/vmware.log
+**Step 2: Check for Incompatible Devices**
+```powershell
+# From vCenter, check VM for local devices
+Get-VM "TestVM-05" | Get-CDDrive | Where {$_.IsoPath -like "*local*"}
 
-**Find vMotion Operation ID:**
+# Check for physical RDM in physical compatibility mode
+Get-VM "TestVM-05" | Get-HardDisk | Where {$_.DiskType -eq "RawPhysical"}
+```
 
-# From vCenter vpxd.log
-grep "relocate" /var/log/vmware/vpxd/vpxd-*.log | grep BEGIN
+**Step 3: Validate Virtual Switch Configuration**
+```bash
+# Ensure virtual switch names match on both hosts
+esxcfg-vswitch -l
 
-# Output shows Operation ID (opID)
-# Example: opID=jzlgfw8g-11824-auto-94h-h5:70003561
+# Check port group names
+esxcli network vswitch standard portgroup list
 
-# Use Operation ID to trace entire migration
-grep "jzlgfw8g-11824" /var/log/vmware/vpxd/vpxd-*.log
+# Verify VM is not using host-local networking
+```
 
-**Interpret vMotion Failure Messages:**
-
-# Network timeout errors
-grep "timeout.*network" /var/log/hostd.log
-
-# Example patterns:
-# "failed to connect to remote host"
-# "timeout waiting for data"
-# "network unreachable"
-
-# Storage errors
-grep -E "storage.*fail|disk.*error" /var/log/hostd.log
-
-# Memory migration errors
-grep -E "memory.*fail|precopy.*timeout" /var/log/vmkernel.log
-
-### 6.6 Advanced vMotion Troubleshooting
-
-**Analyze vMotion Hang at Specific Percentage:**
-
-**10% Hang:**
-# Network connectivity/authentication issue
-grep "authentication\|connect" /var/log/hostd.log | tail -20
-
-# Check SSH connectivity between hosts
-ssh root@<destination_host>
-
-**14% Hang:**
-# Resource allocation issue
-grep "resource.*fail\|admission.*fail" /var/log/hostd.log
-
-**20% Hang:**
-# Memory pre-copy timeout
-grep "memory.*dirty\|precopy" /var/log/vmkernel.log
-
-# VM has high memory change rate
-# Solution: Shutdown and cold migrate, or stun during switchover
-
-**88% Hang:**
-# Final switchover/cutover timeout
-grep "switchover\|cutover" /var/log/vmkernel.log
-
-# Storage latency during final sync
-# Check storage performance
-esxtop
-# Press 'd' for disk view, check DAVG/cmd
-
-**Detailed vMotion Tracing:**
-
-# Enable verbose vMotion logging (ESXi)
+**Step 4: Enable Verbose vMotion Logging**
+```bash
+# Enable detailed vMotion logging
 esxcli system settings advanced set -o /Migrate/Enabled -i 1
 
-# Set log level
+# Set vmkernel log level
 esxcli system syslog config logger set --id=vmkernel --level=debug
 
 # Attempt vMotion
 
-# Review detailed logs
+# Monitor detailed logs
 tail -f /var/log/vmkernel.log | grep -i migrate
 
 # Disable verbose logging after troubleshooting
 esxcli system settings advanced set -o /Migrate/Enabled -i 0
 esxcli system syslog config logger set --id=vmkernel --level=info
+```
 
-**Network Packet Capture during vMotion:**
-
-# Capture on vMotion VMkernel
-pktcap-uw --vmk vmk1 --outfile /tmp/vmotion.pcap
+**Step 5: Capture Network Packets During vMotion**
+```bash
+# Start packet capture on vMotion VMkernel interface
+pktcap-uw --vmk vmk1 --outfile /tmp/vmotion-capture.pcap
 
 # Attempt vMotion in another session
 
 # Stop capture (Ctrl+C)
 
-# Download pcap file for analysis
-scp /tmp/vmotion.pcap user@workstation:/path/
+# Download and analyze with Wireshark
+scp /tmp/vmotion-capture.pcap user@workstation:/analysis/
+```
 
-### 6.7 vMotion Best Practices
+**Step 6: Review vMotion Operation in vCenter Logs**
+```bash
+# Find vMotion operation ID
+grep "relocate" /var/log/vmware/vpxd/vpxd-*.log | grep BEGIN | grep "TestVM-05"
 
-\begin{itemize}
-\item Use dedicated 10GbE or faster network for vMotion
-\item Enable Jumbo Frames (MTU 9000) on vMotion network
-\item Configure multiple vMotion VMkernel adapters for bandwidth aggregation
-\item Enable EVC mode on cluster for maximum mobility
-\item Use vMotion encryption when migrating sensitive workloads
-\item Monitor vMotion performance using vCenter performance charts
-\item Keep VMs with high memory change rate on same host or migrate during maintenance
-\item Ensure consistent virtual switch naming across all hosts
-\end{itemize}
+# Sample output:
+# 2025-11-20T17:30:00.123Z info vpxd[23456] [Originator@6876 sub=vpxLro opID=xyz789-012] BEGIN relocate
+
+# Trace entire operation using opID
+grep "xyz789-012" /var/log/vmware/vpxd/vpxd-*.log | less
+```
+
+**Step 7: Check vMotion Advanced Settings**
+```bash
+# Verify vMotion timeout settings
+vim-cmd hostsvc/advopt/view Migrate.VMotionLatencySensitivity
+vim-cmd hostsvc/advopt/view Migrate.VMotionStreamTimeout
+
+# Verify vMotion bandwidth reservation (if configured)
+esxcli network ip interface tag get -i vmk1
+```
+
+### Related KB Articles
+- **KB 1003734**: Understanding and troubleshooting vMotion
+- **KB 321009**: Understanding and troubleshooting vMotion
+- **KB 318636**: Troubleshooting vMotion fails with network errors
+- **KB 1003728**: Testing VMkernel network connectivity with the vmkping command
+- **KB 1013150**: vMotion fails at 10% with the error: Migration failed while copying data
+- Virtualization Dojo: "5 Awesome Tips to Troubleshoot vMotion"
+
+### vMotion Failure Summary Table
+
+| Failure Point | Common Causes | Primary Check |
+|---------------|---------------|---------------|
+| 10% | Network connectivity, authentication | vmkping, SSH, firewall rules |
+| 14% | Resource allocation, admission control | CPU/memory reservations |
+| 20% | Memory pre-copy timeout | High memory change rate |
+| 88% | Storage latency, final sync | Storage performance, DAVG latency |
+| General | CPU compatibility, device compatibility | EVC mode, local devices |
+
+### vMotion Prerequisites Checklist
+
+- [ ] Gigabit or faster network for vMotion (10GbE recommended)
+- [ ] Shared storage accessible to both hosts
+- [ ] vMotion enabled on VMkernel interfaces
+- [ ] Same virtual switch names on source and destination
+- [ ] Compatible CPU families or EVC enabled
+- [ ] No local ISOs or floppy images mounted
+- [ ] No physical RDMs in physical compatibility mode
+- [ ] vMotion ports open in firewalls (TCP 8000)
+- [ ] Jumbo frames configured consistently (if used)
+- [ ] Proper vMotion licensing
 
 ---
 
-## 7. Common Troubleshooting Commands Reference
+## General Troubleshooting Workflow
 
-### 7.1 VM Management Commands
+### Systematic Approach to Log Analysis
 
-# List all VMs
+**1. Identify Symptoms and Scope**
+- What is the exact error message?
+- Which components are affected? (VM, host, cluster, vCenter)
+- When did the issue start?
+- Were there any recent changes?
+
+**2. Collect Relevant Logs**
+
+**For host issues:**
+```bash
+tail -100 /var/log/hostd.log
+tail -100 /var/log/vmkernel.log
+tail -100 /var/log/vpxa.log
+```
+
+**For VM issues:**
+```bash
+vim-cmd vmsvc/getallvms | grep "VM_NAME"
+tail -100 /vmfs/volumes/<datastore>/<VM_name>/vmware.log
+```
+
+**For HA issues:**
+```bash
+tail -100 /var/log/fdm.log
+grep -i "election\|heartbeat\|isolation" /var/log/fdm.log | tail -50
+```
+
+**For vCenter issues:**
+```bash
+tail -100 /var/log/vmware/vpxd/vpxd.log
+grep -i "error\|fail" /var/log/vmware/vpxd/vpxd.log | tail -50
+```
+
+**3. Search for Error Keywords**
+```bash
+# Common error patterns
+grep -i -E "error|fail|timeout|disconnect" <logfile>
+
+# Specific to issue type
+grep -i "snapshot" <logfile>
+grep -i "migrate\|vmotion" <logfile>
+grep -i "heartbeat" <logfile>
+grep -i "drs" <logfile>
+```
+
+**4. Correlate Timestamps**
+- Match event timestamps across multiple logs
+- Compare user-reported issue time with log timestamps
+- Look for patterns or sequences of events
+
+**5. Verify Environment Health**
+
+**Network connectivity:**
+```bash
+ping <target>
+vmkping -I vmk0 <target>
+esxcli network ip connection list
+```
+
+**Storage access:**
+```bash
+esxcli storage filesystem list
+esxcli storage core path list
+df -h
+```
+
+**Service status:**
+```bash
+/etc/init.d/hostd status
+/etc/init.d/vpxa status
+/etc/init.d/fdm status
+```
+
+**6. Apply Fixes with Caution**
+- Test in lab/dev environment first if possible
+- Take snapshots or backups before changes
+- Document all changes made
+- Have rollback plan ready
+
+**7. Validate Resolution**
+- Verify issue is resolved
+- Test related functionality
+- Monitor logs for recurring issues
+- Update documentation
+
+### Log Collection Best Practices
+
+**Generate Support Bundles:**
+
+**For ESXi:**
+```bash
+vm-support
+# Or with options:
+vm-support -x -d 1440 -w /tmp/
+# Generates: esx-HOSTNAME-DATE-RANDOM.tgz
+```
+
+**For vCenter:**
+```bash
+vc-support -w /tmp/
+# Or from VAMI: https://vcenter:5480 → Support → Download Support Bundle
+```
+
+**Automated Log Collection Script:**
+```bash
+#!/bin/bash
+# log-collect.sh - Collect relevant logs for troubleshooting
+
+DATE=$(date +%Y%m%d-%H%M%S)
+HOSTNAME=$(hostname)
+LOGDIR="/tmp/logs-${HOSTNAME}-${DATE}"
+
+mkdir -p ${LOGDIR}
+
+# Copy ESXi logs
+cp /var/log/hostd.log ${LOGDIR}/
+cp /var/log/vmkernel.log ${LOGDIR}/
+cp /var/log/vpxa.log ${LOGDIR}/
+cp /var/log/fdm.log ${LOGDIR}/
+cp /var/log/shell.log ${LOGDIR}/
+
+# Collect configuration
+esxcli system version get > ${LOGDIR}/system-version.txt
+esxcli network ip interface list > ${LOGDIR}/network-interfaces.txt
+esxcli storage filesystem list > ${LOGDIR}/datastores.txt
+
+# Create tarball
+tar -czf /tmp/logs-${HOSTNAME}-${DATE}.tgz -C /tmp logs-${HOSTNAME}-${DATE}/
+
+echo "Logs collected: /tmp/logs-${HOSTNAME}-${DATE}.tgz"
+```
+
+---
+
+## Critical Commands Reference
+
+### VM Management Commands
+
+```bash
+# List all VMs with VMIDs
 vim-cmd vmsvc/getallvms
 
-# Power operations
+# VM power operations
 vim-cmd vmsvc/power.on <VMID>
 vim-cmd vmsvc/power.off <VMID>
-vim-cmd vmsvc/power.shutdown <VMID>
+vim-cmd vmsvc/power.shutdown <VMID>    # Graceful shutdown
 vim-cmd vmsvc/power.reboot <VMID>
-vim-cmd vmsvc/power.reset <VMID>
+vim-cmd vmsvc/power.reset <VMID>       # Hard reset
 
 # VM information
 vim-cmd vmsvc/get.summary <VMID>
 vim-cmd vmsvc/get.config <VMID>
 vim-cmd vmsvc/get.runtime <VMID>
-vim-cmd vmsvc/get.networks <VMID>
+vim-cmd vmsvc/power.getstate <VMID>
 
 # Snapshot operations
+vim-cmd vmsvc/get.snapshot <VMID>
 vim-cmd vmsvc/snapshot.create <VMID> "snapshot_name" "description"
-vim-cmd vmsvc/snapshot.get <VMID>
 vim-cmd vmsvc/snapshot.removeall <VMID>
+vim-cmd vmsvc/snapshot.remove <VMID> <snapshot_id>
 
 # Register/Unregister VM
 vim-cmd solo/registervm /vmfs/volumes/<datastore>/VM/VM.vmx
@@ -1052,65 +1278,87 @@ vim-cmd vmsvc/unregister <VMID>
 
 # Reload VM configuration
 vim-cmd vmsvc/reload <VMID>
+```
 
-### 7.2 Storage Commands
+### Storage Commands
 
+```bash
 # List datastores
 esxcli storage filesystem list
 
 # Datastore browser
 ls -lh /vmfs/volumes/
 
-# Check VMFS volume
+# Check VMFS volume details
 vmkfstools -P /vmfs/volumes/<datastore_name>
+
+# Storage device info
+esxcli storage core device list
+
+# Storage adapter info
+esxcli storage core adapter list
 
 # Storage paths
 esxcli storage core path list
 
-# Storage adapters
-esxcli storage core adapter list
-
-# Device information
-esxcli storage core device list
-
 # Rescan storage
 esxcli storage core adapter rescan --all
+esxcli storage core adapter rescan -A vmhba1
 
 # VAAI status
 esxcli storage core device vaai status get
 
-### 7.3 Network Commands
+# Clone VMDK
+vmkfstools -i source.vmdk destination.vmdk
 
+# Clone with thin provisioning
+vmkfstools -i source.vmdk -d thin destination.vmdk
+
+# Extend VMDK
+vmkfstools -X 100G VM.vmdk
+```
+
+### Network Commands
+
+```bash
 # List VMkernel interfaces
 esxcli network ip interface list
 esxcfg-vmknic -l
 
-# Virtual switches
+# List virtual switches
 esxcli network vswitch standard list
 esxcfg-vswitch -l
 
-# Port groups
+# List port groups
 esxcli network vswitch standard portgroup list
 
-# Network connectivity test
-vmkping -I vmk0 <IP_address>
-vmkping -s 8972 -d -I vmk0 <IP_address>  # Jumbo frames test
+# Network connectivity tests
+vmkping -I vmk0 <IP>
+vmkping -s 8972 -d -I vmk0 <IP>    # Jumbo frames test
 
 # Firewall rules
 esxcli network firewall ruleset list
 esxcli network firewall ruleset set -e true -r <ruleset_name>
+esxcli network firewall ruleset allowedip list
 
-# TCP/IP stack
+# TCP/IP connections
 esxcli network ip connection list
 
-### 7.4 System Information Commands
+# DNS configuration
+esxcli network ip dns server list
+esxcli network ip dns search list
+```
 
-# ESXi version
+### System Information Commands
+
+```bash
+# ESXi version and build
 vmware -vl
 esxcli system version get
 
 # System uptime
 esxcli system stats uptime get
+uptime
 
 # Hardware information
 esxcli hardware platform get
@@ -1125,230 +1373,140 @@ esxcli hardware memory get
 # Restart services
 /etc/init.d/hostd restart
 /etc/init.d/vpxa restart
+/etc/init.d/fdm restart
+services.sh restart    # Restart all services
+
+# View running processes
+ps -c
+esxcli vm process list
 
 # System logs
 tail -f /var/log/syslog.log
 tail -f /var/log/vmkernel.log
+tail -f /var/log/hostd.log
+```
 
-### 7.5 Performance Monitoring Commands
+### Performance Monitoring Commands
 
+```bash
 # Real-time performance (esxtop)
 esxtop
+
+# esxtop views:
+# c - CPU
+# m - Memory
+# d - Disk
+# n - Network
 
 # esxtop in batch mode
 esxtop -b -d 5 -n 12 > /tmp/esxtop.csv
 
-# CPU statistics
-esxcli vm process list
-esxtop -c  # CPU view
-
-# Memory statistics
-esxtop -m  # Memory view
-
-# Disk statistics
-esxtop -d  # Disk view
-
-# Network statistics
-esxtop -n  # Network view
-
 # VM resource usage
-vsish -e cat /vm/<vmid>/mem/memoryUse
+esxtop -v    # VM view
+```
 
-### 7.6 Cluster and Resource Management
+### PowerCLI Commands
 
-# Cluster information via PowerCLI
+```powershell
+# Connect to vCenter
+Connect-VIServer -Server vcenter.domain.com
+
+# Cluster management
 Get-Cluster | Select Name, HAEnabled, DrsEnabled
+Get-Cluster "Production" | Get-DrsRecommendation
+Get-Cluster "Production" | Get-DrsRule
 
-# Host information
+# Host management
 Get-VMHost | Select Name, ConnectionState, PowerState
+Get-VMHost "esxi-01.domain.com" | Get-Log -Key vmkernel
 
-# Resource pools
-Get-ResourcePool | Select Name, CpuLimitMhz, MemLimitGB
+# VM management
+Get-VM | Select Name, PowerState, NumCpu, MemoryGB
+Get-VM "TestVM-01" | Get-Snapshot
+Get-VM "TestVM-01" | Move-VM -Destination (Get-VMHost "esxi-02.domain.com")
 
-# Move VM to resource pool
-Move-VM -VM "VM_NAME" -Destination (Get-ResourcePool "PoolName")
+# Datastore management
+Get-Datastore | Select Name, CapacityGB, FreeSpaceGB
 
-# DRS recommendations
-Get-Cluster | Get-DrsRecommendation | Apply-DrsRecommendation
-
-# HA status
-Get-Cluster | Select Name, HAEnabled, HAAdmissionControlEnabled
-
-### 7.7 Backup and Recovery Commands
-
-# Backup ESXi configuration
-vim-cmd hostsvc/firmware/backup_config
-
-# Export VM configuration
-vim-cmd vmsvc/get.config <VMID> > /tmp/vm_config.txt
-
-# Clone VMDK
-vmkfstools -i source.vmdk destination.vmdk
-
-# Clone with thin provisioning
-vmkfstools -i source.vmdk -d thin destination.vmdk
-
-# Extend VMDK
-vmkfstools -X <new_size> VM.vmdk
-
-### 7.8 Certificate and Security Commands
-
-# View certificates
-openssl x509 -in /etc/vmware/ssl/rui.crt -text -noout
-
-# Certificate fingerprint
-openssl x509 -in /etc/vmware/ssl/rui.crt -fingerprint -sha1 -noout
-
-# Lockdown mode status
-vim-cmd hostsvc/hostsummary | grep -i lockdown
-
-# User list
-esxcli system account list
-
-# Password policy
-esxcli system account policy get
+# Generate support bundle
+Get-VMHost "esxi-01.domain.com" | Get-Log -Bundle -DestinationPath C:\Logs\
+```
 
 ---
 
-## 8. Troubleshooting Workflow Summary
+## Additional Resources
 
-### 8.1 General Troubleshooting Approach
+### VMware/Broadcom Knowledge Base
 
-\begin{enumerate}
-\item \textbf{Identify the Problem:}
-  \begin{itemize}
-  \item Collect symptoms and error messages
-  \item Determine scope (single VM, host, cluster, vCenter)
-  \item Note when issue started and any recent changes
-  \end{itemize}
+**Official Documentation:**
+- Broadcom Support Portal: https://knowledge.broadcom.com
+- VMware vSphere Documentation: https://techdocs.broadcom.com
 
-\item \textbf{Gather Information:}
-  \begin{itemize}
-  \item Review relevant log files
-  \item Check vCenter events and alarms
-  \item Review performance metrics
-  \item Collect support bundles if needed
-  \end{itemize}
+**Key KB Articles Referenced:**
 
-\item \textbf{Analyze Data:}
-  \begin{itemize}
-  \item Search logs for error patterns
-  \item Correlate timestamps across multiple logs
-  \item Compare working vs non-working configurations
-  \item Identify commonalities in affected objects
-  \end{itemize}
+**Snapshots:**
+- KB 316392: Troubleshooting issues when creating or committing snapshots
+- KB 1015180: Understanding virtual machine snapshots
+- KB 1025279: Best practices for virtual machine snapshots
 
-\item \textbf{Implement Solution:}
-  \begin{itemize}
-  \item Test in isolated environment if possible
-  \item Take backups before making changes
-  \item Document changes made
-  \item Monitor results after implementation
-  \end{itemize}
+**HA:**
+- KB 318936: Troubleshooting VMware High Availability issues
+- KB 324992: Determining if HA cluster has experienced host failure
+- KB 315379: vSphere HA reports agent in Agent Unreachable state
 
-\item \textbf{Verify Resolution:}
-  \begin{itemize}
-  \item Confirm issue is resolved
-  \item Test related functionality
-  \item Update documentation
-  \item Schedule follow-up monitoring
-  \end{itemize}
-\end{enumerate}
+**DRS:**
+- KB 344925: "Unable to apply DRS resource settings on host" error
+- KB 320016: DRS cluster reports errors
+- KB 378718: DRS fails to load balance VMs due to EVC mismatch
 
-### 8.2 Log Analysis Best Practices
+**vMotion:**
+- KB 1003734: Understanding and troubleshooting vMotion
+- KB 321009: Understanding and troubleshooting vMotion
+- KB 318636: Troubleshooting vMotion network errors
 
-\begin{itemize}
-\item Always check timestamps - correlate events across multiple logs
-\item Start with most recent entries and work backwards
-\item Use grep with context flags (-A, -B, -C) for surrounding information
-\item Save filtered output to files for detailed analysis
-\item Create baseline logs from healthy systems for comparison
-\item Enable debug logging only when needed and disable after troubleshooting
-\item Collect logs before and after issue occurrence
-\item Use log bundle collection for complex issues requiring vendor support
-\end{itemize}
+**Host Connectivity:**
+- KB 344682: Troubleshooting ESXi host disconnected/not responding
+- KB 318647: ESXi host disconnects intermittently
+- KB 303652: Changing ESXi host connection status
 
-### 8.3 When to Engage VMware Support
+### Community Resources
 
-Contact VMware/Broadcom Support when:
-
-\begin{itemize}
-\item Issue impacts production and cannot be resolved within SLA
-\item Core vSphere services crash repeatedly
-\item Data loss or corruption suspected
-\item Hardware compatibility issues
-\item Software bugs suspected (unexpected behavior)
-\item Need assistance interpreting complex logs
-\item Cluster-wide failures affecting business operations
-\item Security incidents requiring vendor guidance
-\end{itemize}
-
----
-
-## 9. Quick Reference - Critical Commands
-
-\begin{table}
-\begin{tabular}{|p{7cm}|p{7cm}|}
-\hline
-\textbf{Task} & \textbf{Command} \\
-\hline
-View recent errors in vmkernel & grep -i error /var/log/vmkernel.log | tail -50 \\
-\hline
-Check all VM snapshots & vim-cmd vmsvc/get.snapshot <VMID> \\
-\hline
-Monitor HA events & tail -f /var/log/fdm.log \\
-\hline
-Test vMotion connectivity & vmkping -I vmk1 <dest\_IP> \\
-\hline
-List VMs with power state & vim-cmd vmsvc/getallvms \\
-\hline
-Check storage paths & esxcli storage core path list \\
-\hline
-Generate support bundle & vm-support \\
-\hline
-Restart management agents & /etc/init.d/hostd restart \\
-\hline
-View DRS recommendations & Get-DrsRecommendation (PowerCLI) \\
-\hline
-Check cluster HA status & Get-Cluster | Select HAEnabled \\
-\hline
-\end{tabular}
-\caption{Quick Reference Commands}
-\end{table}
-
----
-
-## 10. Additional Resources
-
-**VMware Knowledge Base:**
-- https://knowledge.broadcom.com (Broadcom/VMware KB)
-- Search for specific error messages and KB articles
-
-**Log File References:**
-- VMware vSphere 8.0 Troubleshooting Guide
-- ESXi Configuration Guide
-- vCenter Server Administration Guide
-
-**Community Resources:**
-- VMware Technology Network (VMTN) Communities
-- Reddit r/vmware
-- Yellow-Bricks.com (Duncan Epping's blog)
-
-**Monitoring Tools:**
-- vRealize Operations Manager
-- vRealize Log Insight
-- Grafana with telegraf for ESXi monitoring
-- NAKIVO Backup & Replication with monitoring
+**Blogs and Forums:**
+- Virtualization Dojo: https://virtualizationdojo.com
+- VMware Communities: https://communities.vmware.com
+- vExpert Directory: https://vexpert.vmware.com
+- Reddit r/vmware: https://reddit.com/r/vmware
 
 **Training and Certification:**
-- VMware vSphere: Troubleshooting Workshop
-- VCAP-DCV Deploy certification
-- vExpert community resources
+- VMware vSphere: Troubleshooting Workshop [V8]
+- VCAP-DCV Deploy Certification
+- vExpert Program Resources
+
+### Monitoring Tools
+
+**Recommended Tools:**
+- vRealize Operations Manager
+- vRealize Log Insight
+- Grafana with Telegraf for ESXi
+- ESXTOP / vscsiStats for performance
+- RVTools for inventory and reporting
 
 ---
 
 ## Document Version History
 
-- Version 1.0 - November 20, 2025 - Initial creation
-- Comprehensive troubleshooting guide covering snapshots, HA, DRS, and vMotion
-- Includes detailed log analysis and command reference
+**Version 1.0 - November 20, 2025**
+- Initial creation
+- Comprehensive scenario-based troubleshooting guide
+- Includes sample logs from real-world scenarios
+- Integrated VMware/Broadcom KB article references
+- Detailed step-by-step resolution procedures
+- Covers snapshots, HA, DRS, vMotion, and host connectivity issues
+
+**Maintained by:** VMware Infrastructure Team  
+**Last Updated:** November 20, 2025  
+**Next Review:** February 20, 2026
+
+---
+
+**End of VMware vSphere Troubleshooting Runbook**
