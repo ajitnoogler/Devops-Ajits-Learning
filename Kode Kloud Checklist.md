@@ -1,7 +1,7 @@
 # 🚀 FINAL COMPREHENSIVE CHECKLIST - KODEKLOUD DEVOPS ENGINEER PATH
 ## Your Complete Action Plan to Land a DevOps Job in 3-4 Months
 
-**Created for:** Ajit Patel (Age 37, 10+ yrs infra/cloud, Caltech Cloud PG, New to DevOps)  
+**Created for:** Ajit Patel (11+ yrs infra/cloud, Caltech Cloud PG, New to DevOps)  
 **Start Date:** Monday, December 2, 2025  
 **Target Job Date:** End of February / Mid-March 2026  
 **Goal:** DevOps Engineer role, ₹18-24L+, CKAD certified
