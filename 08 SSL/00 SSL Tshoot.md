@@ -2,6 +2,11 @@ Here’s a comprehensive list of **common SSL issues** that DevOps, cloud engine
 
 ---
 
+## HTTPS Header Easy to understand
+
+<img width="698" height="234" alt="image" src="https://github.com/user-attachments/assets/974fa18f-87f3-42a5-9e40-c360b388ea97" />
+
+
 ## 🔐 Common SSL Issues
 
 ### 1. **Expired SSL Certificate**
