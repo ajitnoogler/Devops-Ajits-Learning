@@ -11,7 +11,7 @@ Here’s a structured plan for your Fortinet self-paced training with:
 ---
 
 ### 🧭 **Total Time Required: `75 hours`**
-
+## Note if the below link does not work, go to https://training.fortinet.com/local/library/
 ---
 
 ## ✅ **Phase 1 – Foundation (Entry-Level)**
